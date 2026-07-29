@@ -1,6 +1,16 @@
 import { toast } from "sonner";
 
-export const showErrorToast = (error: any) => {
+interface CustomError {
+  response?: {
+    data?: {
+      message?: string;
+      error?: string;
+    };
+  };
+  message?: string;
+}
+
+export const showErrorToast = (error: CustomError) => {
   const message =
     error?.response?.data?.message ||
     error?.response?.data?.error ||
