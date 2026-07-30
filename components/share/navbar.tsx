@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { TUser } from "@/types/type";
+import { getInitials } from "@/utils/getInitials";
 
 
 
