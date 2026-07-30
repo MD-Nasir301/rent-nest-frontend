@@ -4,7 +4,7 @@ export type TUser = {
   statusCode: number;
   message: string;
   data: {
-    profile: {
+    user: {
       id: string;
       name: string;
       email: string;

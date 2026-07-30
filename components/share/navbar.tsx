@@ -16,10 +16,8 @@ import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { TUser } from "@/types/type";
 import { getInitials } from "@/utils/getInitials";
+import { logout } from "@/services/logout";
 
-
-
-// ১. ইনিশিয়াল বের করার হেলপার ফাংশন
 
 
 const navItems =  [
@@ -29,19 +27,23 @@ const navItems =  [
   { label: "Contact", href: "/contact" },
   ];
 
-export function Navbar({ user }: { user?: TUser }) {
+
+  export  function Navbar({ user }: { user?: TUser }) {
   const router = useRouter();
 
-  const userProfile = user?.data?.profile;
-  const userName = userProfile?.name || "User";
-  const userEmail = userProfile?.email || "";
-  const userRole = userProfile?.role;
-  const userAvatar = userProfile?.profile?.profilePhoto || "";
+  const userData = user?.data?.user;
+  const userName = userData?.name || "User";
+  const userEmail = userData?.email || "";
+  const userRole = userData?.role;
+  const userAvatar = userData?.profile?.profilePhoto || "";
 
-const handleLogout = () => {
-  toast.success("Logged out successfully!");
-  router.push("/login");
-};
+  const handleUserMenuAction = async (action: string) => {
+    if (action === "logout") {
+      await logout();
+      toast.success("User Logged Out Successfully!");
+      router.push("/login");
+    }
+  }
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background">
@@ -106,7 +108,7 @@ const handleLogout = () => {
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}>
+              <DropdownMenuItem onClick={() => handleUserMenuAction("logout")}>
                 <LogOut className="mr-2 h-4 w-4" />
                 Log out
               </DropdownMenuItem>

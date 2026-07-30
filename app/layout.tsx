@@ -18,7 +18,6 @@ export default async function RootLayout({
       className={cn("h-full antialiased", "font-sans", inter.variable)}
     >
       <body className="min-h-full flex flex-col">
-        <Navbar />
         <Toaster position="top-right" richColors />
         {children}
       </body>
