@@ -1,4 +1,3 @@
-
 export type TUser = {
   success: boolean;
   statusCode: number;
@@ -24,22 +23,34 @@ export type TUser = {
   };
 };
 
-
-
 export type NavItem = {
   label: string;
   href: string;
 };
 
-
 export type LoginState = {
-    success : true,
-    statusCode : number,
-    message : string,
-    data : {
-        accessToken : string,
-        refreshToken : string
-    }
-}
+  success: true;
+  statusCode: number;
+  message: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+  };
+};
 
-
+export type RegisterState = {
+  success: boolean;
+  statusCode?: number;
+  message: string;
+  data?: {
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      role: string;
+      isBanned: boolean;
+      createdAt: string;
+      updatedAt: string;
+    };
+  };
+} | null;

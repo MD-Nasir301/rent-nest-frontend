@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Building2 } from "lucide-react";
-import LoginForm from "../_components/loginForm";
+import LoginForm from "../_components/LoginForm";
 
 export default function LoginPage() {
   return (

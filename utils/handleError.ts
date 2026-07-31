@@ -1,23 +1,23 @@
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
-interface CustomError {
-  response?: {
-    data?: {
-      message?: string;
-      error?: string;
-    };
-  };
-  message?: string;
-}
+// interface CustomError {
+//   response?: {
+//     data?: {
+//       message?: string;
+//       error?: string;
+//     };
+//   };
+//   message?: string;
+// }
 
-export const showErrorToast = (error: CustomError) => {
-  const message =
-    error?.response?.data?.message ||
-    error?.response?.data?.error ||
-    error?.message ||
-    "Something went wrong! Please try again.";
+// export const showErrorToast = (error: CustomError) => {
+//   const message =
+//     error?.response?.data?.message ||
+//     error?.response?.data?.error ||
+//     error?.message ||
+//     "Something went wrong! Please try again.";
 
-  toast.error("Error!", {
-    description: message,
-  });
-};
+//   toast.error("Error!", {
+//     description: message,
+//   });
+// };

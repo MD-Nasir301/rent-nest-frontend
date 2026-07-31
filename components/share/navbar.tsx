@@ -1,6 +1,11 @@
 "use client";
 import Link from "next/link";
-import { LogOut, Settings, User as UserIcon } from "lucide-react";
+import {
+  Building2Icon,
+  LogOut,
+  Settings,
+  User as UserIcon,
+} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -18,17 +23,14 @@ import { TUser } from "@/types/type";
 import { getInitials } from "@/utils/getInitials";
 import { logout } from "@/services/logout";
 
-
-
-const navItems =  [
-{ label: "Home", href: "/" },
+const navItems = [
+  { label: "Home", href: "/" },
   { label: "Properties", href: "/properties" },
   { label: "About Us", href: "/about" },
   { label: "Contact", href: "/contact" },
-  ];
+];
 
-
-  export  function Navbar({ user }: { user?: TUser }) {
+export function Navbar({ user }: { user?: TUser }) {
   const router = useRouter();
 
   const userData = user?.data?.user;
@@ -43,16 +45,21 @@ const navItems =  [
       toast.success("User Logged Out Successfully!");
       router.push("/login");
     }
-  }
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
         {/* লোগো */}
-        <Link href="/" className="text-lg font-bold">
-          Rent<span className="text-green-600"> Nest</span>
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 font-bold text-xl"
+        >
+          <Building2Icon className="h-6 w-6 text-green-600" />
+          <span>
+            Rent<span className="text-green-600">Nest</span>
+          </span>
         </Link>
-
         {/* নেভিগেশন লিংকস */}
         <nav
           className="hidden items-center gap-1 md:flex"
