@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getAllProperties } from "@/services/property.service";
+import { getAllCategories } from "@/services/category.service";
 
 // ব্যাকএ্যান্ড ডাটা অবজেক্ট অনুযায়ী ইন্টারফেস
 interface Property {
@@ -24,6 +25,7 @@ interface Property {
 
 export default async function HomePage() {
   const { data: properties } = await getAllProperties();
+  const categories = await getAllCategories();
 
   // প্রথম ৬টি প্রপার্টি ফেভারিট হিসেবে দেখানো
   const featuredProperties: Property[] = properties?.slice(0, 6) || [];
@@ -58,10 +60,12 @@ export default async function HomePage() {
               name="type"
               className="px-4 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
             >
-              <option value="">All Types</option>
-              <option value="House">House</option>
-              <option value="Apartment">Apartment</option>
-              <option value="Sublet">Sublet</option>
+              <option value="">All Categories</option>
+              {categories?.data?.map((cate: { id: string; name: string }) => (
+                <option key={cate.id} value={cate.name}>
+                  {cate.name}
+                </option>
+              ))}
             </select>
             <button
               type="submit"
