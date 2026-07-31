@@ -11,10 +11,7 @@ export const loginAction = async (
 ) => {
   const email = formData.get("email");
   const password = formData.get("password");
-  const payload = {
-    email,
-    password,
-  };
+  const payload = { email, password };
 
   try {
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/login`, {
@@ -79,6 +76,7 @@ export const registerAction = async (
     role,
     password,
   };
+
   try {
     const res = await fetch(
       `${process.env.BACKEND_API_URL}/api/auth/register`,
@@ -100,12 +98,14 @@ export const registerAction = async (
       };
     }
 
-
-    return {
-      success: true,
-      message: result.message || "Account created successfully!",
-    };
+    if (res.ok && result.success) {
+      redirect("/login?registered=true");
+    }
   } catch (error) {
+    if ((error as Error).message === "NEXT_REDIRECT") {
+      throw error;
+    }
+
     console.error("Register Action Error:", error);
     return {
       success: false,

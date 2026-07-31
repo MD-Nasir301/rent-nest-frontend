@@ -3,36 +3,19 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@base-ui/react/input";
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect } from "react";
 import { registerAction } from "../_actions/authActions";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-
-const initialState = {
-  success: false,
-  message: "",
-};
 
 const RegisterForm = () => {
-  const [state, action, pending] = useActionState(registerAction, initialState);
-
-  const router = useRouter();
-  const prevSuccess = useRef(false);
+  const [state, action, pending] = useActionState(registerAction, null);
 
   useEffect(() => {
     if (!state) return;
-
-    if (state.success && !prevSuccess.current) {
-      toast.success(state.message || "Account created successfully!");
-      router.push("/login");
-    }
-
-    if (!state.success && state.message) {
+    if (state && !state.success) {
       toast.error(state.message || "Failed to register, Please try again");
     }
-
-    prevSuccess.current = state.success;
-  }, [state, router]);
+  }, [state]);
 
   return (
     <div>
@@ -71,7 +54,7 @@ const RegisterForm = () => {
             placeholder="Create a strong password"
             required
           />
-          <Button type="submit">
+          <Button type="submit" disabled={pending}>
             {pending ? "Submitting..." : "Register"}
           </Button>
         </Card>
