@@ -60,7 +60,7 @@ export function Navbar({ user }: { user?: TUser }) {
             Rent<span className="text-green-600">Nest</span>
           </span>
         </Link>
-        {/* নেভিগেশন লিংকস */}
+      
         <nav
           className="hidden items-center gap-1 md:flex"
           aria-label="Main navigation"

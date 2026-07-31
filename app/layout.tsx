@@ -2,8 +2,7 @@ import { cn } from "@/lib/utils";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
-import { Navbar } from "@/components/share/navbar";
-
+import { Navbar } from "@/components/share/Navbar";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 

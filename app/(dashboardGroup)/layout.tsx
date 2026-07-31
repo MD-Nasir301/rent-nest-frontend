@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/share/navbar";
+import { Navbar } from "@/components/share/Navbar";
 import { getMe } from "@/services/getMe";
 
 const DashboardGroupLayout = async ({

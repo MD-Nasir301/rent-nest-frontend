@@ -54,3 +54,33 @@ export type RegisterState = {
     };
   };
 } | null;
+
+
+// types/category.type.ts
+
+export type Category = {
+  id: string;
+  name: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+
+export type TProperty = {
+  id: string;
+  title: string;
+  description?: string;
+  location: string;
+  price: number;
+  amenities?: string[];
+  images?: string[];
+  isAvailable: boolean;
+  category?: {
+    name: string;
+  };
+  landlord?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}

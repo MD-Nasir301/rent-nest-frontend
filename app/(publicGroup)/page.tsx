@@ -1,34 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getAllProperties } from "@/services/property.service";
+import { TProperty } from "@/types/type";
 import { getAllCategories } from "@/services/category.service";
-
-// ব্যাকএ্যান্ড ডাটা অবজেক্ট অনুযায়ী ইন্টারফেস
-interface Property {
-  id: string;
-  title: string;
-  description?: string;
-  location: string;
-  price: number;
-  amenities?: string[];
-  images?: string[];
-  isAvailable: boolean;
-  category?: {
-    name: string;
-  };
-  landlord?: {
-    id: string;
-    name: string;
-    email: string;
-  };
-}
+import HeroSearchForm from "@/app/(publicGroup)/_components/HeroSearchForm";
 
 export default async function HomePage() {
   const { data: properties } = await getAllProperties();
-  const categories = await getAllCategories();
-
-  // প্রথম ৬টি প্রপার্টি ফেভারিট হিসেবে দেখানো
-  const featuredProperties: Property[] = properties?.slice(0, 6) || [];
+  const featuredProperties: TProperty[] = properties?.slice(0, 6) || [];
+  const categoriesRes = await getAllCategories();
+  const categories = categoriesRes?.data || [];
 
   return (
     <main className="min-h-screen bg-gray-50 pb-16">
@@ -45,35 +26,7 @@ export default async function HomePage() {
           </p>
 
           {/* 🔍 Quick Search Bar */}
-          <form
-            action="/properties"
-            method="GET"
-            className="bg-white p-3 rounded-xl shadow-lg flex flex-col md:flex-row gap-3 max-w-2xl mx-auto text-gray-800"
-          >
-            <input
-              type="text"
-              name="search"
-              placeholder="Search by location or title..."
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-            />
-            <select
-              name="type"
-              className="px-4 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
-            >
-              <option value="">All Categories</option>
-              {categories?.data?.map((cate: { id: string; name: string }) => (
-                <option key={cate.id} value={cate.name}>
-                  {cate.name}
-                </option>
-              ))}
-            </select>
-            <button
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition"
-            >
-              Search
-            </button>
-          </form>
+          <HeroSearchForm categories={categories} />
         </div>
       </section>
 
