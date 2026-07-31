@@ -18,16 +18,16 @@ const LoginForm = () => {
   return (
     <div>
       <form action={action} className="space-y-4">
-        <Card className="p-5 space-y-4">
+        <Card className="p-5 space-y-4 ">
           <Input
-            className="p-3 rounded-lg"
+            className="p-3 rounded-lg border border-blue-200 bg-sky-100"
             name="email"
             type="email"
             placeholder="Enter Your Email"
             required
           />
           <Input
-            className="p-3 rounded-lg"
+            className="p-3 rounded-lg border border-blue-200  bg-sky-100"
             name="password"
             type="password"
             placeholder="Enter Your Password"

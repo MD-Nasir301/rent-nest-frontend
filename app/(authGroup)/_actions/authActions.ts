@@ -39,8 +39,8 @@ export const loginAction = async (
       maxAge: 60 * 60 * 24 * 7,
       sameSite: "lax",
     });
-
     const decodedToken = jwt.decode(result.data.accessToken) as JwtPayload;
+
     if (decodedToken.role === "LANDLORD") {
       redirect("/landlord-dashboard");
     } else if (decodedToken.role === "ADMIN") {
@@ -49,6 +49,6 @@ export const loginAction = async (
       redirect("/tenant-dashboard");
     }
   }
- console.log(result)
+
   return result;
 };
