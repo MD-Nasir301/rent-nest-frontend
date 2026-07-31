@@ -1,5 +1,6 @@
 "use server";
 
+import { loginSchema, registerSchema } from "@/schema/auth.schema";
 import { LoginState, RegisterState } from "@/types/type";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { cookies } from "next/headers";
@@ -12,6 +13,14 @@ export const loginAction = async (
   const email = formData.get("email");
   const password = formData.get("password");
   const payload = { email, password };
+
+  const validation = loginSchema.safeParse(payload);
+  if (!validation.success) {
+    return {
+      success: false,
+      message: validation.error.issues[0].message,
+    };
+  }
 
   try {
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/login`, {
@@ -76,6 +85,15 @@ export const registerAction = async (
     role,
     password,
   };
+
+  const validation = registerSchema.safeParse(payload);
+
+  if (!validation.success) {
+    return {
+      success: false,
+      message: validation.error.issues[0].message,
+    };
+  }
 
   try {
     const res = await fetch(
