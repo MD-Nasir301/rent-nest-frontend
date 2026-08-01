@@ -10,7 +10,7 @@ export default function TenantSidebar() {
   const navItems = [
     {
       name: "Overview",
-      href: "/tenant-dashboard/overview",
+      href: "/tenant-dashboard/",
       icon: LayoutDashboard,
     },
     {
