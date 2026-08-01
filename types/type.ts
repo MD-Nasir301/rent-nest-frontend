@@ -89,3 +89,19 @@ export type filterParam = {
   minPrice?: string;
   maxPrice?: string;
 };
+
+export type CreateRentalPayload = {
+  propertyId: string;
+  startDate: string;
+  endDate: string;
+  message?: string;
+  totalPrice : number;
+}
+
+export type RequestRentModalProps = {
+  propertyId: string;
+  propertyTitle: string;
+  price: number;
+  isOpen: boolean;
+  onClose: () => void;
+}

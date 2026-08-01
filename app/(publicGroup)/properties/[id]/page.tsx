@@ -1,8 +1,9 @@
 import { getSingleProperty } from "@/services/property.service";
-import { Property } from "@/types/property.type";
-import { Key, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { TProperty } from "@/types/type";
+import PropertySidebar from "../../_components/PropertySidebar"; // 👈 সঠিক কম্পোনেন্ট ইমপোর্ট করা হয়েছে
 
 interface PropertyDetailsPageProps {
   params: Promise<{
@@ -16,8 +17,7 @@ export default async function PropertyDetailsPage({
   const { id } = await params;
 
   const res = await getSingleProperty(id);
-  const property: Property | null = res?.data || null;
-  console.log(property);
+  const property: TProperty | null = res?.data || null;
 
   if (!property) {
     return (
@@ -70,7 +70,7 @@ export default async function PropertyDetailsPage({
           </div>
           <p className="text-sm text-gray-500 flex items-center gap-1">
             <MapPin className="w-4 h-4 text-gray-400" /> {property.location}
-          </p>{" "}
+          </p>
         </div>
 
         <div className="flex items-center gap-4">
@@ -177,62 +177,9 @@ export default async function PropertyDetailsPage({
           )}
         </div>
 
-        {/* Right Column: Landlord Card & Request to Rent Action */}
+        {/* Right Column: Dynamic Client Component Sidebar */}
         <div className="space-y-6">
-          <div className="bg-white border rounded-2xl p-6 shadow-sm space-y-5 sticky top-6">
-            <h3 className="font-bold text-gray-900 border-b pb-3 text-base">
-              Landlord Information
-            </h3>
-
-            {/* Landlord Profile */}
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg border"></div>
-              <div>
-                <p className="text-sm font-bold text-gray-900">
-                  {property.landlord?.name || "Unknown Landlord"}
-                </p>
-                <p className="text-xs text-gray-500">
-                  {" "}
-                  {property.landlord?.email || ""}
-                </p>
-              </div>
-            </div>
-
-            <hr className="border-gray-100" />
-
-            {/* Price Summary */}
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-500 font-medium">Monthly Rent:</span>
-              <span className="font-extrabold text-gray-900 text-base">
-                ৳{property.price}
-              </span>
-            </div>
-
-            {/* Request To Rent Button / Form Area */}
-            {property.isAvailable ? (
-              <button
-                type="button"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-sm flex items-center justify-center gap-2"
-              >
-                <span>
-                  <Key className="w-4 h-4" />
-                </span>{" "}
-                Request to Rent
-              </button>
-            ) : (
-              <button
-                disabled
-                className="w-full bg-gray-200 text-gray-500 font-bold py-3 rounded-xl text-sm cursor-not-allowed"
-              >
-                Currently Rented
-              </button>
-            )}
-
-            <p className="text-[11px] text-gray-400 text-center">
-              Clicking request will notify the landlord to review your
-              application.
-            </p>
-          </div>
+          <PropertySidebar property={property} />
         </div>
       </div>
     </div>
