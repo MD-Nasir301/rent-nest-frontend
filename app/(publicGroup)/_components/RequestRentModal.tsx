@@ -5,6 +5,8 @@ import { X, Calculator } from "lucide-react";
 import { toast } from "sonner";
 import { createRentalRequest } from "@/services/rental.service";
 import { calculateTotalRent } from "@/utils/claculateTotalRent";
+import { getMe } from "@/services/getMe";
+import { useRouter } from "next/navigation";
 
 interface RequestRentModalProps {
   propertyId: string;
@@ -25,6 +27,7 @@ export default function RequestRentModal({
   const [endDate, setEndDate] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   if (!isOpen) return null;
 
@@ -40,6 +43,22 @@ export default function RequestRentModal({
     setIsLoading(true);
 
     try {
+      const userRes = await getMe();
+
+      if (!userRes?.success || !userRes?.data) {
+        toast.error("Please login first to send a rental request!");
+        onClose();
+        router.push("/login");
+        return;
+      }
+
+      const currentUser = userRes.data?.user || userRes.data;
+
+      if (currentUser?.role !== "TENANT") {
+        toast.error("Only users with a Tenant account can request rental!");
+        return;
+      }
+
       const res = await createRentalRequest({
         propertyId,
         startDate,
@@ -47,14 +66,17 @@ export default function RequestRentModal({
         message,
         totalPrice: calculation.totalPrice,
       });
-      console.log("Rental request response:", res);
 
-      toast.success("Rental request submitted successfully!");
-
-      setStartDate("");
-      setEndDate("");
-      setMessage("");
-      onClose();
+      if (res.success) {
+        toast.success("Rental request submitted successfully!");
+        setStartDate("");
+        setEndDate("");
+        setMessage("");
+        onClose();
+        router.push("/dashboard/tenant/rental-requests");
+      } else {
+        toast.error("Rental request submitted Failed! Please try again");
+      }
     } catch (error: any) {
       console.error("Failed to submit request", error);
       // 🔹 Error Toast
