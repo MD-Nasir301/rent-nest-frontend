@@ -23,13 +23,6 @@ import { TUser } from "@/types/type";
 import { getInitials } from "@/utils/getInitials";
 import { logout } from "@/services/logout";
 
-const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Properties", href: "/properties" },
-  { label: "About Us", href: "/about" },
-  { label: "Contact", href: "/contact" },
-];
-
 export function Navbar({ user }: { user?: TUser }) {
   const router = useRouter();
 
@@ -38,6 +31,25 @@ export function Navbar({ user }: { user?: TUser }) {
   const userEmail = userData?.email || "";
   const userRole = userData?.role;
   const userAvatar = userData?.profile?.profilePhoto || "";
+
+  let dashboard = "/";
+  if (userRole === "TENANT") {
+    dashboard = "tenant-dashboard";
+  }
+  if (userRole === "LANDLORD") {
+    dashboard = "landlord-dashboard";
+  }
+  if (userRole === "ADMIN") {
+    dashboard = "admin-dashboard";
+  }
+
+  const navItems = [
+    { label: "Home", href: "/" },
+    { label: "Properties", href: "/properties" },
+    userRole ? { label: "Dashboard", href: `/${dashboard}` } : null,
+    { label: "About Us", href: "/about" },
+    { label: "Contact", href: "/contact" },
+  ].filter(Boolean);
 
   const handleUserMenuAction = async (action: string) => {
     if (action === "logout") {
@@ -60,23 +72,22 @@ export function Navbar({ user }: { user?: TUser }) {
             Rent<span className="text-green-600">Nest</span>
           </span>
         </Link>
-      
+
         <nav
           className="hidden items-center gap-1 md:flex"
           aria-label="Main navigation"
         >
           {navItems.map((item) => (
             <Link
-              key={item.href}
-              href={item.href}
+              key={item?.href}
+              href={item?.href || "#"}
               className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
             >
-              {item.label}
+              {item?.label}
             </Link>
           ))}
         </nav>
 
-        {/* ইউজার স্টেট অনুযায়ী ড্রপডাউন বা লগইন বাটন */}
         {user?.success ? (
           <DropdownMenu>
             <DropdownMenuTrigger
