@@ -17,6 +17,7 @@ export default async function PropertyDetailsPage({
 
   const res = await getSingleProperty(id);
   const property: Property | null = res?.data || null;
+  console.log(property);
 
   if (!property) {
     return (
@@ -188,9 +189,12 @@ export default async function PropertyDetailsPage({
               <div className="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg border"></div>
               <div>
                 <p className="text-sm font-bold text-gray-900">
-                  Property Owner
+                  {property.landlord?.name || "Unknown Landlord"}
                 </p>
-                <p className="text-xs text-gray-500">Verified Landlord</p>
+                <p className="text-xs text-gray-500">
+                  {" "}
+                  {property.landlord?.email || ""}
+                </p>
               </div>
             </div>
 
