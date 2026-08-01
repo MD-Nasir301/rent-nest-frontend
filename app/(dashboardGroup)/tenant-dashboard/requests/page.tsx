@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Calendar, MapPin, Tag, Clock, AlertCircle } from "lucide-react";
 import { getMyRentalRequests } from "@/services/rental.service";
 import { RentalRequest } from "@/types/type";
+import RentalRequestActions from "../../_components/RentalRequestActions";
 
 export default async function TenantRentalRequestsPage() {
   const res = await getMyRentalRequests();
@@ -145,11 +146,11 @@ export default async function TenantRentalRequestsPage() {
                     </span>
 
                     {/* Conditional Action Button */}
-                    {request.status === "APPROVED" && (
-                      <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-lg font-semibold transition text-xs">
-                        Proceed to Pay
-                      </button>
-                    )}
+                    <RentalRequestActions
+                      requestId={request.id}
+                      propertyTitle={property?.title || "Rental Property"}
+                      status={request.status}
+                    />
                   </div>
                 </div>
               </div>
