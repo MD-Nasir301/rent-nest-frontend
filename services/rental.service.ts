@@ -48,12 +48,15 @@ export const getMyRentalRequests = async () => {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value || "";
 
-    const res = await fetch(`${process.env.BACKEND_API_URL}/api/rentals`, {
-      headers: {
-        Cookie: `accessToken=${accessToken}`,
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/rentals`,
+      {
+        headers: {
+          Cookie: `accessToken=${accessToken}`,
+        },
+        cache: "no-store", // রিয়েল-টাইম আপডেটের জন্য
       },
-      cache: "no-store", // রিয়েল-টাইম আপডেটের জন্য
-    });
+    );
 
     const result = await res.json();
     return result;

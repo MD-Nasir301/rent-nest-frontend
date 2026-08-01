@@ -23,13 +23,16 @@ export const loginAction = async (
   }
 
   try {
-    const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       },
-      body: JSON.stringify(payload),
-    });
+    );
 
     const result = await res.json();
 
@@ -97,7 +100,7 @@ export const registerAction = async (
 
   try {
     const res = await fetch(
-      `${process.env.BACKEND_API_URL}/api/auth/register`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register`,
       {
         method: "POST",
         headers: {
