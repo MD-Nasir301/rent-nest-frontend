@@ -32,3 +32,29 @@ export const getAllProperties = async (searchParams?: filterParam) => {
     return { success: false, data: [] };
   }
 };
+
+
+export const getSingleProperty = async (id: string) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/properties/${id}`,
+      {
+        cache: "no-store", 
+      }
+    );
+
+    if (!res.ok) {
+      return { success: false, data: null };
+    }
+
+    const result = await res.json();
+
+    return {
+      success: true,
+      data: result?.data || result || null,
+    };
+  } catch (error) {
+    console.error("Error fetching single property:", error);
+    return { success: false, data: null };
+  }
+};

@@ -1,85 +1,234 @@
+import { getSingleProperty } from "@/services/property.service";
+import { Property } from "@/types/property.type";
+import { Key, MapPin } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
-async function getSingleProperty(id: string) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/properties/${id}`,
-      { cache: "no-store" },
-    );
-    const data = await res.json();
-    return data?.data || data;
-  } catch {
-    return null;
-  }
+interface PropertyDetailsPageProps {
+  params: Promise<{
+    id: string;
+  }>;
 }
 
 export default async function PropertyDetailsPage({
   params,
-}: {
-  params: { id: string };
-}) {
-  const property = await getSingleProperty(params.id);
+}: PropertyDetailsPageProps) {
+  const { id } = await params;
 
-  if (!property)
-    return <div className="p-10 text-center">Property not found!</div>;
+  const res = await getSingleProperty(id);
+  const property: Property | null = res?.data || null;
+
+  if (!property) {
+    return (
+      <div className="max-w-7xl mx-auto p-12 text-center my-10 bg-white rounded-xl border">
+        <h2 className="text-2xl font-bold text-gray-800">
+          Property Not Found!
+        </h2>
+        <p className="text-gray-500 text-sm mt-1">
+          The property you are looking for does not exist or has been removed.
+        </p>
+        <Link
+          href="/properties"
+          className="mt-5 inline-block bg-blue-600 text-white font-medium px-5 py-2.5 rounded-lg text-sm hover:bg-blue-700 transition"
+        >
+          Back to All Properties
+        </Link>
+      </div>
+    );
+  }
+
+  const mainImage =
+    property.images &&
+    property.images.length > 0 &&
+    property.images[0].startsWith("http")
+      ? property.images[0]
+      : "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800";
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-8">
-      {/* Title & Location */}
-      <div>
-        <h1 className="text-3xl font-bold">{property.title}</h1>
-        <p className="text-gray-500">📍 {property.location}</p>
+    <div className="max-w-7xl mx-auto p-6 space-y-8 min-h-screen">
+      {/* 🔹 Back Button */}
+      <Link
+        href="/properties"
+        className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-600 hover:text-blue-600 transition"
+      >
+        ← Back to properties
+      </Link>
+
+      {/* 🔹 Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-6">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">
+              {property.title}
+            </h1>
+            {property.category?.name && (
+              <span className="text-xs font-semibold bg-gray-100 border text-gray-700 px-2.5 py-1 rounded-md">
+                {property.category.name}
+              </span>
+            )}
+          </div>
+          <p className="text-sm text-gray-500 flex items-center gap-1">
+            <MapPin className="w-4 h-4 text-gray-400" /> {property.location}
+          </p>{" "}
+        </div>
+
+        <div className="flex items-center gap-4">
+          <div>
+            <span className="text-2xl font-black text-blue-600">
+              ৳{property.price}
+            </span>
+            <span className="text-xs text-gray-500"> / month</span>
+          </div>
+          <span
+            className={`text-xs font-bold px-3 py-1.5 rounded-full ${
+              property.isAvailable
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {property.isAvailable ? "Available" : "Rented"}
+          </span>
+        </div>
       </div>
 
-      {/* Image Gallery */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="relative h-72 w-full rounded-xl overflow-hidden bg-gray-100">
+      {/* 🔹 Image Gallery */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[350px] md:h-[420px]">
+        {/* Main Big Image */}
+        <div className="relative md:col-span-2 h-full rounded-2xl overflow-hidden bg-gray-100 border">
           <Image
-            src={property.images?.[0] || "/placeholder.jpg"}
-            alt="Main Image"
+            src={mainImage}
+            alt={property.title}
             fill
+            priority
+            sizes="(max-width: 768px) 100vw, 66vw"
             className="object-cover"
           />
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          {property.images?.slice(1, 5).map((img: string, idx: number) => (
-            <div
-              key={idx}
-              className="relative h-35 w-full rounded-lg overflow-hidden bg-gray-100"
-            >
-              <Image src={img} alt="Gallery" fill className="object-cover" />
-            </div>
-          ))}
+
+        {/* Small Additional Images */}
+        <div className="hidden md:grid grid-rows-2 gap-4 h-full">
+          {property.images && property.images.length > 1 ? (
+            property.images.slice(1, 3).map((img, idx) => (
+              <div
+                key={idx}
+                className="relative h-full rounded-2xl overflow-hidden bg-gray-100 border"
+              >
+                <Image
+                  src={img}
+                  alt="Property Image"
+                  fill
+                  sizes="33vw"
+                  className="object-cover"
+                />
+              </div>
+            ))
+          ) : (
+            <>
+              <div className="relative h-full rounded-2xl overflow-hidden bg-gray-100 border">
+                <Image
+                  src={mainImage}
+                  alt="Property Preview"
+                  fill
+                  sizes="33vw"
+                  className="object-cover opacity-80"
+                />
+              </div>
+              <div className="relative h-full rounded-2xl overflow-hidden bg-gray-100 border flex items-center justify-center bg-gray-50 text-gray-400 text-xs font-semibold">
+                No more photos
+              </div>
+            </>
+          )}
         </div>
       </div>
 
-      {/* Details & CTA */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="md:col-span-2 space-y-4">
-          <h2 className="text-xl font-bold border-b pb-2">Description</h2>
-          <p className="text-gray-600">
-            {property.description || "No description provided."}
-          </p>
+      {/* 🔹 Details & Request Sidebar Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4">
+        {/* Left Column: Description & Amenities */}
+        <div className="md:col-span-2 space-y-8">
+          {/* Overview / Description */}
+          <div className="space-y-3 bg-white p-6 border rounded-2xl shadow-sm">
+            <h2 className="text-lg font-bold text-gray-900 border-b pb-2">
+              About this property
+            </h2>
+            <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+              {property.description ||
+                "No description provided for this property."}
+            </p>
+          </div>
+
+          {/* Amenities */}
+          {property.amenities && property.amenities.length > 0 && (
+            <div className="space-y-4 bg-white p-6 border rounded-2xl shadow-sm">
+              <h2 className="text-lg font-bold text-gray-900 border-b pb-2">
+                Amenities & Features
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {property.amenities.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 bg-gray-50 border border-gray-100 p-2.5 rounded-xl text-xs text-gray-700 font-medium"
+                  >
+                    <span className="text-green-600 font-bold">✓</span> {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Sidebar Box with CTA */}
-        <div className="border p-6 rounded-xl space-y-4 bg-gray-50 h-fit">
-          <div className="text-2xl font-bold text-blue-600">
-            ৳{property.price}{" "}
-            <span className="text-xs text-gray-500">/ month</span>
-          </div>
-          <div className="border-t pt-2 text-xs space-y-1 text-gray-600">
-            <p>
-              <strong>Landlord:</strong>{" "}
-              {property.landlord?.name || "Verified Owner"}
+        {/* Right Column: Landlord Card & Request to Rent Action */}
+        <div className="space-y-6">
+          <div className="bg-white border rounded-2xl p-6 shadow-sm space-y-5 sticky top-6">
+            <h3 className="font-bold text-gray-900 border-b pb-3 text-base">
+              Landlord Information
+            </h3>
+
+            {/* Landlord Profile */}
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg border"></div>
+              <div>
+                <p className="text-sm font-bold text-gray-900">
+                  Property Owner
+                </p>
+                <p className="text-xs text-gray-500">Verified Landlord</p>
+              </div>
+            </div>
+
+            <hr className="border-gray-100" />
+
+            {/* Price Summary */}
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-gray-500 font-medium">Monthly Rent:</span>
+              <span className="font-extrabold text-gray-900 text-base">
+                ৳{property.price}
+              </span>
+            </div>
+
+            {/* Request To Rent Button / Form Area */}
+            {property.isAvailable ? (
+              <button
+                type="button"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-sm flex items-center justify-center gap-2"
+              >
+                <span>
+                  <Key className="w-4 h-4" />
+                </span>{" "}
+                Request to Rent
+              </button>
+            ) : (
+              <button
+                disabled
+                className="w-full bg-gray-200 text-gray-500 font-bold py-3 rounded-xl text-sm cursor-not-allowed"
+              >
+                Currently Rented
+              </button>
+            )}
+
+            <p className="text-[11px] text-gray-400 text-center">
+              Clicking request will notify the landlord to review your
+              application.
             </p>
-            <p>
-              <strong>Contact:</strong> {property.landlord?.email || "N/A"}
-            </p>
           </div>
-          <button className="w-full bg-blue-600 text-white font-semibold py-2.5 rounded-lg text-sm hover:bg-blue-700">
-            Request to Rent
-          </button>
         </div>
       </div>
     </div>

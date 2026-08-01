@@ -2,6 +2,7 @@ import PropertyFilterForm from "@/components/share/PropertyFilterForm";
 import { getAllCategories } from "@/services/category.service";
 import { getAllProperties } from "@/services/property.service";
 import { TProperty } from "@/types/type";
+import { MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -97,7 +98,10 @@ export default async function PropertiesPage({
                     <h3 className="font-bold text-gray-900 text-base line-clamp-1">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-gray-500">📍 {item.location}</p>
+                    <p className="text-xs text-gray-500 flex items-center gap-1">
+                      <MapPin className="w-4 h-4 text-gray-400 shrink-0" />
+                      <span>{item.location}</span>
+                    </p>
 
                     {item.amenities && item.amenities.length > 0 && (
                       <div className="flex flex-wrap gap-1 pt-1">
