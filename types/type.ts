@@ -55,7 +55,6 @@ export type RegisterState = {
   };
 } | null;
 
-
 // types/category.type.ts
 
 export type Category = {
@@ -64,7 +63,6 @@ export type Category = {
   createdAt?: string;
   updatedAt?: string;
 };
-
 
 export type TProperty = {
   id: string;
@@ -83,4 +81,11 @@ export type TProperty = {
     name: string;
     email: string;
   };
-}
+};
+
+export type filterParam = {
+  location?: string;
+  type?: string;
+  minPrice?: string;
+  maxPrice?: string;
+};

@@ -1,11 +1,22 @@
-export const getAllProperties = async () => {
+import { filterParam } from "@/types/type";
+
+export const getAllProperties = async (searchParams?: filterParam) => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/properties`,
-      {
-        cache: "no-store",
-      },
-    );
+    const query = new URLSearchParams();
+
+    if (searchParams?.location) query.append("location", searchParams.location);
+    if (searchParams?.type) query.append("type", searchParams.type);
+    if (searchParams?.minPrice) query.append("minPrice", searchParams.minPrice);
+    if (searchParams?.maxPrice) query.append("maxPrice", searchParams.maxPrice);
+
+    const queryString = query.toString();
+    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/properties${
+      queryString ? `?${queryString}` : ""
+    }`;
+
+    const res = await fetch(url, {
+      cache: "no-store",
+    });
 
     if (!res.ok) {
       return { success: false, data: [] };
@@ -14,7 +25,7 @@ export const getAllProperties = async () => {
     const result = await res.json();
     return {
       success: true,
-      data: result?.data || result || [],
+      data: result?.data?.properties || result?.data || result || [],
     };
   } catch (error) {
     console.error("Error fetching properties:", error);

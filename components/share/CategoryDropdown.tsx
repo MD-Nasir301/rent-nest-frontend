@@ -25,7 +25,7 @@ export default function CategoryDropdown({
       name={name}
       value={value}
       onChange={onChange}
-      className={`px-4 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white text-gray-800 ${className}`}
+      className={`px-4 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-300 text-sm bg-white text-gray-800 ${className}`}
     >
       <option value="">{defaultLabel}</option>
       {categories.map((cate) => (

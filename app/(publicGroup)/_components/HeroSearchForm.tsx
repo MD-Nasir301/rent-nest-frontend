@@ -11,14 +11,15 @@ interface HeroSearchFormProps {
 
 export default function HeroSearchForm({ categories }: HeroSearchFormProps) {
   const router = useRouter();
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [location, setLocation] = useState("");
+  const [type, setType] = useState(""); 
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (search.trim()) params.append("search", search.trim());
-    if (selectedCategory) params.append("category", selectedCategory);
+
+    if (location.trim()) params.append("location", location.trim());
+    if (type) params.append("type", type); 
 
     router.push(`/properties?${params.toString()}`);
   };
@@ -31,16 +32,16 @@ export default function HeroSearchForm({ categories }: HeroSearchFormProps) {
       <input
         type="text"
         placeholder="Search by location or title..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
         className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-800"
       />
 
       {/* 🔹 Reusable Category Dropdown */}
       <CategoryDropdown
         categories={categories}
-        value={selectedCategory}
-        onChange={(e) => setSelectedCategory(e.target.value)}
+        value={type} 
+        onChange={(e) => setType(e.target.value)} 
       />
 
       <button
