@@ -105,3 +105,21 @@ export type RequestRentModalProps = {
   isOpen: boolean;
   onClose: () => void;
 }
+
+
+export type RentalRequest = {
+  id: string;
+  startDate: string;
+  endDate: string;
+  totalPrice: number;
+  status: "PENDING" | "APPROVED" | "REJECTED" | "ACTIVE" | "COMPLETED";
+  createdAt: string;
+  property: {
+    id: string;
+    title: string;
+    description: string;
+    location: string;
+    price: number;
+    images: string[];
+  };
+}

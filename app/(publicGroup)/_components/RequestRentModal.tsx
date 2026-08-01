@@ -73,7 +73,7 @@ export default function RequestRentModal({
         setEndDate("");
         setMessage("");
         onClose();
-        router.push("/dashboard/tenant/rental-requests");
+        router.push("/tenant-dashboard/requests");
       } else {
         toast.error("Rental request submitted Failed! Please try again");
       }

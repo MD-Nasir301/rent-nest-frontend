@@ -1,11 +1,10 @@
-import React from "react";
 
-const TenentDashboardPage = async () => {
+import React from 'react'
+
+const TenantDashboard = () => {
   return (
-    <div>
-      <div>TenantDashboardPage</div>
-    </div>
-  );
-};
+    <div>TenantDashboard</div>
+  )
+}
 
-export default TenentDashboardPage;
+export default TenantDashboard
