@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Edit, Trash2, MapPin, Plus } from "lucide-react";
 import { deleteProperty } from "@/services/landlord.service";
-import EditPropertyModal from "./AddEditPropertyModel";
+import EditPropertyModal from "./EditPropertyModel";
 import { getAllProperties } from "@/services/property.service";
 
 export default function LandlordPropertiesCard({
@@ -36,7 +36,6 @@ export default function LandlordPropertiesCard({
         return itemId === updatedId ? { ...item, ...updatedData } : item;
       }),
     );
-    toast.success("Display updated!");
     router.refresh();
   };
 
