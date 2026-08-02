@@ -4,12 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Edit, Trash2, MapPin, DollarSign, Plus } from "lucide-react";
+import { Edit, Trash2, MapPin, Plus } from "lucide-react";
 import { deleteProperty } from "@/services/landlord.service";
-import EditPropertyModal from "./EditPropertyModel";
+import EditPropertyModal from "./AddEditPropertyModel";
+import { getAllProperties } from "@/services/property.service";
 
-
-export default function LandlordPropertiesList({
+export default function LandlordPropertiesCard({
   initialProperties,
 }: {
   initialProperties: any[];
@@ -28,9 +28,15 @@ export default function LandlordPropertiesList({
   };
 
   const handleUpdateSuccess = (updatedData: any) => {
+    const updatedId = updatedData.id || updatedData._id;
+
     setProperties((prev) =>
-      prev.map((item) => (item.id === updatedData.id ? updatedData : item))
+      prev.map((item) => {
+        const itemId = item.id || item._id;
+        return itemId === updatedId ? { ...item, ...updatedData } : item;
+      }),
     );
+    toast.success("Display updated!");
     router.refresh();
   };
 
@@ -58,7 +64,9 @@ export default function LandlordPropertiesList({
   if (properties.length === 0) {
     return (
       <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center">
-        <h3 className="text-lg font-semibold text-slate-800">No properties found</h3>
+        <h3 className="text-lg font-semibold text-slate-800">
+          No properties found
+        </h3>
         <p className="text-slate-500 text-sm mt-1 mb-6">
           You haven't listed any properties yet.
         </p>
@@ -99,7 +107,9 @@ export default function LandlordPropertiesList({
                       : "bg-slate-500 text-white"
                   }`}
                 >
-                  {property.isAvailable !== false ? "Available" : "Rented / Unavailable"}
+                  {property.isAvailable !== false
+                    ? "Available"
+                    : "Rented / Unavailable"}
                 </span>
               </div>
 
@@ -109,11 +119,13 @@ export default function LandlordPropertiesList({
                 </h3>
                 <p className="text-slate-500 text-xs flex items-center gap-1">
                   <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                  <span className="line-clamp-1">{property.location || "N/A"}</span>
+                  <span className="line-clamp-1">
+                    {property.location || "N/A"}
+                  </span>
                 </p>
                 <div className="pt-2 flex items-center justify-between">
                   <span className="text-xl font-extrabold text-blue-600 flex items-center">
-                    <span>Tk </span> {}
+                    <span>Tk </span>{" "}
                     {property.rentAmount || property.price || 0}
                     <span className="text-xs font-normal text-slate-400 ml-1">
                       / month

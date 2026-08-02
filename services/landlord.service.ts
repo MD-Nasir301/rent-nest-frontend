@@ -134,3 +134,25 @@ export const updateProperty = async (propertyId: string, payload: any) => {
     throw new Error(error?.message || "Failed to update property");
   }
 };
+
+export const createProperty = async (data: any) => {
+  try {
+    const cookieStore = await cookies();
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/landlord/properties`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieStore.toString(),
+      },
+      body: JSON.stringify(data),
+      cache: "no-store",
+    });
+
+    return await res.json();
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error?.message || "Failed to create property",
+    };
+  }
+};

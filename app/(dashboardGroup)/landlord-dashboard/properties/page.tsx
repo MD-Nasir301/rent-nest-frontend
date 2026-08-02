@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { getLandlordProperties } from "@/services/landlord.service"; 
-import LandlordPropertiesList from "../../_components/LandlordPropertiesList";
+import { getLandlordProperties } from "@/services/landlord.service";
+import LandlordPropertiesCard from "../../_components/LandlordPropertiesCard";
 
 export default async function LandlordMyPropertiesPage() {
   const response = await getLandlordProperties();
@@ -29,7 +29,7 @@ export default async function LandlordMyPropertiesPage() {
       </div>
 
       {/* Client Component */}
-      <LandlordPropertiesList initialProperties={properties} />
+      <LandlordPropertiesCard initialProperties={properties} />
     </div>
   );
 }

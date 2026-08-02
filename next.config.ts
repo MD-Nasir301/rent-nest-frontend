@@ -14,6 +14,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "via.placeholder.com",
       },
+      {
+        protocol: "https",
+        hostname: "www.mydomaine.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.livehome3d.com",
+      },
     ],
   },
 };
