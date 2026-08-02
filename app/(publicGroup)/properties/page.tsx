@@ -121,7 +121,7 @@ export default async function PropertiesPage({
                   <div className="flex justify-between items-center border-t pt-3 mt-2">
                     <div>
                       <span className="text-lg font-extrabold text-blue-600">
-                        ৳{item.price}
+                        Tk {item.price}
                       </span>
                       <span className="text-[11px] text-gray-400">/mo</span>
                     </div>

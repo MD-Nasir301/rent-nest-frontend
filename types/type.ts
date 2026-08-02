@@ -64,6 +64,23 @@ export type Category = {
   updatedAt?: string;
 };
 
+export type RentalRequest = {
+  id: string;
+  startDate: string;
+  endDate: string;
+  totalPrice: number;
+  status: "PENDING" | "APPROVED" | "REJECTED" | "ACTIVE" | "COMPLETED";
+  createdAt: string;
+  property: {
+    id: string;
+    title: string;
+    description: string;
+    location: string;
+    price: number;
+    images: string[];
+  };
+};
+
 export type TProperty = {
   id: string;
   title: string;
@@ -81,6 +98,7 @@ export type TProperty = {
     name: string;
     email: string;
   };
+  rentals?: RentalRequest[];
 };
 
 export type filterParam = {
@@ -95,8 +113,8 @@ export type CreateRentalPayload = {
   startDate: string;
   endDate: string;
   message?: string;
-  totalPrice : number;
-}
+  totalPrice: number;
+};
 
 export type RequestRentModalProps = {
   propertyId: string;
@@ -104,22 +122,4 @@ export type RequestRentModalProps = {
   price: number;
   isOpen: boolean;
   onClose: () => void;
-}
-
-
-export type RentalRequest = {
-  id: string;
-  startDate: string;
-  endDate: string;
-  totalPrice: number;
-  status: "PENDING" | "APPROVED" | "REJECTED" | "ACTIVE" | "COMPLETED";
-  createdAt: string;
-  property: {
-    id: string;
-    title: string;
-    description: string;
-    location: string;
-    price: number;
-    images: string[];
-  };
-}
+};
