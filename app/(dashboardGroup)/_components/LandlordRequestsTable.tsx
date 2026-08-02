@@ -1,18 +1,35 @@
-
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Check, X } from "lucide-react";
-import { updateRequestStatus } from "@/services/landlord.service"; 
+import { updateRequestStatus } from "@/services/landlord.service";
+import { RentalRequest } from "@/types/type";
 
-export default function LandlordRequestsTable({ initialRequests }: { initialRequests: any[] }) {
+export default function LandlordRequestsTable({
+  initialRequests,
+}: {
+  initialRequests: RentalRequest[];
+}) {
+  console.log("Initial Requests:", initialRequests); // for debugging
   const router = useRouter();
   const [requests, setRequests] = useState(initialRequests);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
-  const handleStatusUpdate = async (id: string, status: "APPROVED" | "REJECTED") => {
+  const hndleDateFormat = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const handleStatusUpdate = async (
+    id: string,
+    status: "APPROVED" | "REJECTED",
+  ) => {
     try {
       setUpdatingId(id);
       const res = await updateRequestStatus(id, status);
@@ -20,7 +37,7 @@ export default function LandlordRequestsTable({ initialRequests }: { initialRequ
       if (res?.success || res?.data) {
         toast.success(`Request ${status.toLowerCase()} successfully!`);
         setRequests((prev) =>
-          prev.map((item) => (item.id === id ? { ...item, status } : item))
+          prev.map((item) => (item.id === id ? { ...item, status } : item)),
         );
         router.refresh();
       } else {
@@ -46,22 +63,33 @@ export default function LandlordRequestsTable({ initialRequests }: { initialRequ
               <tr className="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-400 uppercase tracking-wider">
                 <th className="p-4 pl-6">Property</th>
                 <th className="p-4">Tenant</th>
+                <th className="p-4">Start Date</th>
+                <th className="p-4">End Date</th>
                 <th className="p-4">Rent Amount</th>
                 <th className="p-4">Status</th>
                 <th className="p-4 pr-6 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-sm font-medium text-slate-700">
-              {requests.map((request) => (
-                <tr key={request.id} className="hover:bg-slate-50/50 transition">
+              {requests.map((request: RentalRequest) => (
+                <tr
+                  key={request.id}
+                  className="hover:bg-slate-50/50 transition"
+                >
                   <td className="p-4 pl-6 font-semibold text-slate-900">
                     {request.property?.title || "N/A"}
                   </td>
                   <td className="p-4 text-slate-600">
-                    {request.tenant?.name || request.tenant?.email || "Tenant"}
+                    {request.tenant?.name || "N/A"} <br />
                   </td>
                   <td className="p-4 font-semibold text-slate-900">
-                    ${request.rentAmount || request.property?.rentAmount || 0}
+                    <span>{hndleDateFormat(request.startDate)}</span>
+                  </td>
+                  <td className="p-4 font-semibold text-slate-900">
+                    <span>{hndleDateFormat(request.endDate)}</span>
+                  </td>
+                  <td className="p-4 font-semibold text-slate-900">
+                    Tk {request?.totalPrice || 0}
                   </td>
                   <td className="p-4">
                     <span
@@ -69,10 +97,10 @@ export default function LandlordRequestsTable({ initialRequests }: { initialRequ
                         request.status === "PENDING"
                           ? "bg-amber-50 text-amber-700 border border-amber-200"
                           : request.status === "APPROVED"
-                          ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                          : request.status === "REJECTED"
-                          ? "bg-rose-50 text-rose-700 border border-rose-200"
-                          : "bg-blue-50 text-blue-700 border border-blue-200"
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                            : request.status === "REJECTED"
+                              ? "bg-rose-50 text-rose-700 border border-rose-200"
+                              : "bg-blue-50 text-blue-700 border border-blue-200"
                       }`}
                     >
                       {request.status}
@@ -83,7 +111,9 @@ export default function LandlordRequestsTable({ initialRequests }: { initialRequ
                       <div className="flex items-center justify-end gap-2">
                         <button
                           disabled={updatingId === request.id}
-                          onClick={() => handleStatusUpdate(request.id, "APPROVED")}
+                          onClick={() =>
+                            handleStatusUpdate(request.id, "APPROVED")
+                          }
                           className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1 disabled:opacity-50"
                         >
                           <Check className="w-3.5 h-3.5" />
@@ -91,7 +121,9 @@ export default function LandlordRequestsTable({ initialRequests }: { initialRequ
                         </button>
                         <button
                           disabled={updatingId === request.id}
-                          onClick={() => handleStatusUpdate(request.id, "REJECTED")}
+                          onClick={() =>
+                            handleStatusUpdate(request.id, "REJECTED")
+                          }
                           className="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1 disabled:opacity-50"
                         >
                           <X className="w-3.5 h-3.5" />
@@ -99,7 +131,9 @@ export default function LandlordRequestsTable({ initialRequests }: { initialRequ
                         </button>
                       </div>
                     ) : (
-                      <span className="text-xs text-slate-400 italic">No action needed</span>
+                      <span className="text-xs text-slate-400 italic">
+                        No action needed
+                      </span>
                     )}
                   </td>
                 </tr>

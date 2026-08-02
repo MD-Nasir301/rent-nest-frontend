@@ -79,6 +79,10 @@ export type RentalRequest = {
     price: number;
     images: string[];
   };
+  tenant?: {
+    name: string;
+    email: string;
+  };
 };
 
 export type TProperty = {
