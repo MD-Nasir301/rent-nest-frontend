@@ -6,26 +6,31 @@ import {
 } from "@/services/admin.service";
 import { TProperty, RentalRequest } from "@/types/type";
 
+
 export default async function AdminDashboardPage() {
   let users = [];
   let properties: TProperty[] = [];
   let requests: RentalRequest[] = [];
 
-try {
-   
-  
+  let usersError = false;
+  let propertiesError = false;
+  let requestsError = false;
+
+  try {
     const [usersRes, propertiesRes, requestsRes] = await Promise.all([
       getAllUsers(),
       getAllProperties(),
       getAllRentalRequests(),
     ]);
 
-    users = usersRes?.data || [];
-    properties = propertiesRes?.data || [];
-    requests = requestsRes?.data || [];
+    if (usersRes?.success) users = usersRes.data || [];
+    else usersError = true;
 
-    // কনসোল লগগুলো একবারে ক্লিয়ারভাবে আসবে
-    console.log("✅ Admin Dashboard Data Fetched Successfully");
+    if (propertiesRes?.success) properties = propertiesRes.data || [];
+    else propertiesError = true;
+
+    if (requestsRes?.success) requests = requestsRes.data || [];
+    else requestsError = true;
   } catch (err) {
     console.error("Error fetching overview data:", err);
   }
@@ -54,6 +59,11 @@ try {
             <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
               Total Users
             </p>
+            {usersError && (
+              <p className="text-red-500 text-sm">
+                Failed to fetch users
+              </p>
+            )}
             <p className="text-2xl font-black text-slate-900 mt-1">
               {totalUsers}
             </p>
@@ -68,6 +78,11 @@ try {
             <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
               Total Properties
             </p>
+            {propertiesError && (
+              <p className="text-red-500 text-sm">
+                Failed to fetch properties
+              </p>
+            )}
             <p className="text-2xl font-black text-slate-900 mt-1">
               {totalProperties}
             </p>
@@ -82,6 +97,11 @@ try {
             <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
               Pending Requests
             </p>
+            {requestsError && (
+              <p className="text-red-500 text-sm">
+                Failed to fetch rental requests
+              </p>
+            )}
             <p className="text-2xl font-black text-amber-600 mt-1">
               {pendingRequests}
             </p>
