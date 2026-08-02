@@ -5,7 +5,6 @@ import { cookies } from "next/headers";
 export const getLandlordProperties = async () => {
   try {
     const cookieStore = await cookies();
-
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/landlord/properties`,
       {
@@ -36,7 +35,6 @@ export const getLandlordProperties = async () => {
 export const getRentalRequests = async () => {
   try {
     const cookieStore = await cookies();
-
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/landlord/requests`,
       {
@@ -68,13 +66,16 @@ export const updateRequestStatus = async (
   id: string,
   status: "APPROVED" | "REJECTED",
 ) => {
- 
   try {
+    const cookieStore = await cookies();
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/landlord/requests/${id}`,
       {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
         body: JSON.stringify({ status }),
       },
     );
@@ -89,7 +90,6 @@ export const updateRequestStatus = async (
   }
 };
 
-
 export const deleteProperty = async (propertyId: string) => {
   try {
     const cookieStore = await cookies();
@@ -101,10 +101,36 @@ export const deleteProperty = async (propertyId: string) => {
           "Content-Type": "application/json",
           Cookie: cookieStore.toString(),
         },
-      }
+      },
     );
     return await res.json();
   } catch (error: any) {
     throw new Error(error?.message || "Failed to delete property");
+  }
+};
+
+export const updateProperty = async (propertyId: string, payload: any) => {
+  try {
+    const cookieStore = await cookies();
+    const id =
+      typeof propertyId === "object"
+        ? (propertyId as any)?.id || (propertyId as any)?._id
+        : propertyId;
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/landlord/properties/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(payload),
+      },
+    );
+
+    return await res.json();
+  } catch (error: any) {
+    throw new Error(error?.message || "Failed to update property");
   }
 };
