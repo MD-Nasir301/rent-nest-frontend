@@ -4,10 +4,17 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Edit, Trash2, MapPin, Plus } from "lucide-react";
+import {
+  Edit,
+  Trash2,
+  MapPin,
+  Plus,
+  Sparkles,
+  CheckCircle2,
+} from "lucide-react";
 import { deleteProperty } from "@/services/landlord.service";
 import EditPropertyModal from "./EditPropertyModel";
-import { getAllProperties } from "@/services/property.service";
+import { TProperty } from "@/types/type";
 
 export default function LandlordPropertiesCard({
   initialProperties,
@@ -83,7 +90,7 @@ export default function LandlordPropertiesCard({
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {properties.map((property) => (
+        {properties.map((property: TProperty) => (
           <div
             key={property.id}
             className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between"
@@ -106,9 +113,7 @@ export default function LandlordPropertiesCard({
                       : "bg-slate-500 text-white"
                   }`}
                 >
-                  {property.isAvailable !== false
-                    ? "Available"
-                    : "Rented / Unavailable"}
+                  {property.isAvailable !== false ? "Available" : "Unavailable"}
                 </span>
               </div>
 
@@ -122,10 +127,15 @@ export default function LandlordPropertiesCard({
                     {property.location || "N/A"}
                   </span>
                 </p>
+                <p className="text-slate-500 text-xs flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                  <span className="line-clamp-1">
+                    {property.amenities?.join(", ") || "N/A"}
+                  </span>
+                </p>
                 <div className="pt-2 flex items-center justify-between">
                   <span className="text-xl font-extrabold text-blue-600 flex items-center">
-                    <span>Tk </span>{" "}
-                    {property.rentAmount || property.price || 0}
+                    <p>Tk {property.price || 0}</p>
                     <span className="text-xs font-normal text-slate-400 ml-1">
                       / month
                     </span>
