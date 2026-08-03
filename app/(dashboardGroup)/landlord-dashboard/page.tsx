@@ -60,20 +60,26 @@ export default async function LandlordDashboardPage() {
           </div>
         </div>
 
-        {/* Active/Pending Requests */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-              Pending Requests
-            </p>
-            <p className="text-2xl font-bold text-amber-600 mt-2">
-              {pendingRequest.length}
-            </p>
+        {/* Pending Requests */}
+        <Link
+          href="/landlord-dashboard/properties/requests"
+          className="hover:scale-[1.02] transition-all"
+        >
+          {" "}
+          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                Pending Requests
+              </p>
+              <p className="text-2xl font-bold text-amber-600 mt-2">
+                {pendingRequest.length}
+              </p>
+            </div>
+            <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center">
+              <Clock className="w-6 h-6" />
+            </div>
           </div>
-          <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center">
-            <Clock className="w-6 h-6" />
-          </div>
-        </div>
+        </Link>
 
         {/* Approved Rentals */}
         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
