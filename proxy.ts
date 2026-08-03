@@ -7,7 +7,12 @@ import { jwtUtils } from "./utils/jwt"; // আপনার ইউটিল প�
 
 const AUTH_ROUTES = ["/login", "/register"];
 
-const PUBLIC_ROUTES = ["/", "/properties"];
+const PUBLIC_ROUTES = [
+  "/",
+  "/properties",
+  "/payment/success",
+  "/payment/cancel",
+];
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;

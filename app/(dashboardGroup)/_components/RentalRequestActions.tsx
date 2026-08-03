@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import ReviewModal from "./ReviewModal"; // আপনার বানানো রিভিউ মডাল
+import ReviewModal from "./ReviewModal"; 
 import { toast } from "sonner";
 import { createPaymentSession } from "@/services/payment.service";
 
