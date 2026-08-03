@@ -73,10 +73,10 @@ export const loginAction = async (
   }
 };
 
-export const registerAction = async (
+export const registerAction  = async (
   prevState: RegisterState,
   formData: FormData,
-) => {
+): Promise<RegisterState> => {
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const role = formData.get("role") as string;
@@ -127,7 +127,6 @@ export const registerAction = async (
       throw error;
     }
 
-    console.error("Register Action Error:", error);
     return {
       success: false,
       message: "Something went wrong. Please check your network connection.",

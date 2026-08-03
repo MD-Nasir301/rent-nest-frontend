@@ -4,14 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import {
-  Edit,
-  Trash2,
-  MapPin,
-  Plus,
-  Sparkles,
-  CheckCircle2,
-} from "lucide-react";
+import Image from "next/image";
+import { Edit, Trash2, MapPin, Plus, CheckCircle2 } from "lucide-react";
 import { deleteProperty } from "@/services/landlord.service";
 import EditPropertyModal from "./EditPropertyModel";
 import { TProperty } from "@/types/type";
@@ -97,10 +91,9 @@ export default function LandlordPropertiesCard({
           >
             <div>
               <div className="relative w-full h-48 bg-slate-100">
-                <img
+                <Image
                   src={
                     property.images?.[0] ||
-                    property.imageUrl ||
                     "https://placehold.co/600x400?text=No+Image"
                   }
                   alt={property.title}

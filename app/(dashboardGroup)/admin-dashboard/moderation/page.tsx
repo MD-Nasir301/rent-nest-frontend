@@ -17,7 +17,7 @@ import {
   getAllProperties,
   getAllRentalRequests,
 } from "@/services/admin.service";
-import { TProperty, RentalRequest } from "@/types"; // আপনার টাইপ ফাইল থেকে ইমপোর্ট
+import { TProperty, RentalRequest } from "@/types/type";
 
 export default function ContentModerationPage() {
   const [activeTab, setActiveTab] = useState<"properties" | "requests">(

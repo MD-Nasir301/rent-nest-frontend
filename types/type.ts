@@ -53,7 +53,7 @@ export type RegisterState = {
       updatedAt: string;
     };
   };
-} | null;
+} | null | undefined;
 
 // types/category.type.ts
 
@@ -92,7 +92,7 @@ export type TProperty = {
   location: string;
   price: number;
   amenities?: string[];
-  images?: string[];
+  images?: string[] ;
   isAvailable: boolean;
   category?: {
     name: string;

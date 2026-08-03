@@ -8,6 +8,7 @@ import { registerAction } from "../_actions/authActions";
 import { toast } from "sonner";
 
 const RegisterForm = () => {
+  
   const [state, action, pending] = useActionState(registerAction, null);
 
   useEffect(() => {
