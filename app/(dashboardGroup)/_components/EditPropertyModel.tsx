@@ -7,8 +7,8 @@ import {
   Loader2,
   Plus,
   Trash2,
-  Image as Icon,
   CheckCircle2,
+  ImageIcon,
 } from "lucide-react";
 import { updateProperty } from "@/services/landlord.service";
 import { getAllCategories } from "@/services/category.service";
