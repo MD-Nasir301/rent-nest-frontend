@@ -98,6 +98,8 @@ export default function LandlordPropertiesCard({
                   }
                   alt={property.title}
                   className="w-full h-full object-cover"
+                  width={1278}
+                  height={800}
                 />
                 <span
                   className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${
