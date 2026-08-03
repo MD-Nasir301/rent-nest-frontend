@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏡 RentNest Frontend
 
-## Getting Started
+RentNest Frontend is a modern property and rental management web application built with Next.js. It allows users to browse available properties, submit rental requests, make payments, and manage role-based dashboards for tenants, landlords, and administrators.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- 🔐 User authentication with login and registration
+- 👥 Role-based access for tenants, landlords, and admins
+- 🏠 Property listing with search and filtering options
+- 📄 Property details page for viewing amenities, price, and availability
+- 📝 Rental request submission and request tracking
+- 💳 Payment flow for tenant payments
+- 🧑‍💼 Landlord dashboard for managing properties and rental requests
+- 🛡️ Admin dashboard for user management, moderation, and request review
+- 🚫 Ban and unban support for users and content moderation
+
+## 🛠️ Tech Stack
+
+- Frontend: Next.js, React, TypeScript
+- Styling: Tailwind CSS, shadcn/ui components
+- Icons: Lucide React
+- Forms & Validation: React Hook Form, Zod
+- Notifications: Sonner and toast-based UI feedback
+- Backend Integration: Fetch-based API calls to a backend service
+- Auth & Session Handling: Next.js server actions with cookies
+
+## ▶️ Getting Started
+
+### Prerequisites
+
+- Node.js 18 or newer
+- npm or yarn
+- A running backend API for the project
+
+### Installation
+
+1. Clone the repository
+
+   ```bash
+   git clone <repository-url>
+   cd rent_nest_frontend
+   ```
+
+2. Install dependencies
+
+   ```bash
+   npm install
+   ```
+
+3. Create a local environment file
+
+   ```bash
+   cp .env.example .env.local
+   ```
+
+4. Update the environment variables in `.env.local`
+
+5. Start the development server
+
+   ```bash
+   npm run dev
+   ```
+
+6. Open your browser and visit
+   ```text
+   http://localhost:3000
+   ```
+
+## 🌐 Environment Variables
+
+Create a `.env.local` file in the project root and add the following variable:
+
+```env
+NEXT_PUBLIC_BACKEND_URL=http://localhost:5000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Replace the URL with the address of your backend API.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+A simplified overview of the main folders:
 
-## Learn More
+```text
+app/               # Main Next.js app routes and page layouts
+components/       # Reusable UI components and shared layouts
+services/         # API service functions for auth, properties, rentals, payments, and admin actions
+types/            # TypeScript types used across the project
+lib/              # Utility and helper functions
+public/           # Static assets
+schema/           # Validation schemas
+```
 
-To learn more about Next.js, take a look at the following resources:
+## ℹ️ Notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This frontend is designed to work with a separate backend service. Make sure your backend is running and reachable through the `NEXT_PUBLIC_BACKEND_URL` value.

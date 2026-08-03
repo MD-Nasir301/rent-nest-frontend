@@ -3,7 +3,7 @@ import { MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { TProperty } from "@/types/type";
-import PropertySidebar from "../../_components/PropertySidebar"; // 👈 সঠিক কম্পোনেন্ট ইমপোর্ট করা হয়েছে
+import PropertySidebar from "../../_components/PropertySidebar"; 
 
 interface PropertyDetailsPageProps {
   params: Promise<{
@@ -134,7 +134,7 @@ export default async function PropertyDetailsPage({
                   className="object-cover opacity-80"
                 />
               </div>
-              <div className="relative h-full rounded-2xl overflow-hidden bg-gray-100 border flex items-center justify-center bg-gray-50 text-gray-400 text-xs font-semibold">
+              <div className="relative h-full rounded-2xl overflow-hidden bg-gray-100 border flex items-center justify-center  text-gray-400 text-xs font-semibold">
                 No more photos
               </div>
             </>

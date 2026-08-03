@@ -1,3 +1,4 @@
+"use server";
 import { cookies } from "next/headers";
 
 export const getMe = async () => {
@@ -18,8 +19,8 @@ export const getMe = async () => {
         headers: {
           Cookie: `accessToken=${accessToken}`,
         },
-        cache: "no-store", 
-      }
+        cache: "no-store",
+      },
     );
 
     if (!res.ok) {
@@ -31,7 +32,6 @@ export const getMe = async () => {
 
     const result = await res.json();
     return result;
-
   } catch (error) {
     return {
       success: false,
@@ -39,3 +39,5 @@ export const getMe = async () => {
     };
   }
 };
+
+
