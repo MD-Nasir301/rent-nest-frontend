@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
-import { Navbar } from "@/components/share/Navbar";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -16,7 +15,7 @@ export default async function RootLayout({
       lang="en"
       className={cn("h-full antialiased", "font-sans", inter.variable)}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-gray-100">
         <Toaster position="top-right" richColors />
         {children}
       </body>
