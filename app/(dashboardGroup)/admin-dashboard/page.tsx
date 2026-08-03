@@ -45,7 +45,7 @@ export default async function AdminDashboardPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-extrabold text-slate-900">
-          Admin Overview
+          Admin Dashboard
         </h1>
         <p className="text-sm text-slate-500 mt-1">
           Global overview of platform health and activity.

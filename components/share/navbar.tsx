@@ -104,11 +104,12 @@ export function Navbar({ user }: { user?: TUser }) {
               <DropdownMenuGroup>
                 <DropdownMenuLabel>
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-medium">{userName}</span>
-                    <span className="text-xs font-normal text-muted-foreground">
+                    <span className="text-sm text-black font-medium">{userName}</span>
+                    <span className="text-xs font-normal py-1 text-muted-foreground">
                       {userEmail}
                     </span>
-                    <span className="text-xs font-semibold capitalize text-primary">
+                    <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-green-600 text-white w-fit">
+                      {" "}
                       {userRole}
                     </span>
                   </div>
