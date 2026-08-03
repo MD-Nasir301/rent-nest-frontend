@@ -2,7 +2,6 @@ import { getMyPaymentHistory } from "@/services/payment.service";
 import { CreditCard, CheckCircle2, Clock, XCircle } from "lucide-react";
 
 export default async function TenantPaymentsPage() {
-
   const res = await getMyPaymentHistory();
   const payments: any[] = res?.data || [];
 
@@ -68,11 +67,10 @@ export default async function TenantPaymentsPage() {
 
                     {/* Payment Status Badge */}
                     <td className="p-4">
-                      {payment.status === "COMPLETED" ||
-                      payment.status === "PAID" ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      {payment.status === "SUCCESS" ? (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-green-500 text-white ">
                           <CheckCircle2 className="w-3.5 h-3.5" />
-                          Paid
+                          Success
                         </span>
                       ) : payment.status === "PENDING" ? (
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
@@ -89,9 +87,7 @@ export default async function TenantPaymentsPage() {
 
                     {/* Date */}
                     <td className="p-4 text-gray-500">
-                      {new Date(
-                        payment.createdAt || Date.now(),
-                      ).toLocaleDateString("en-US", {
+                      {new Date(payment.createdAt).toLocaleDateString("en-US", {
                         day: "numeric",
                         month: "short",
                         year: "numeric",

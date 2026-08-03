@@ -56,15 +56,15 @@ export default async function TenantRentalRequestsPage() {
       ) : (
         /* Requests List / Grid */
         <div className="grid grid-cols-1 gap-5">
-          {rentalRequests.map((request) => {
-            const property = request.property;
+          {rentalRequests.map((rental) => {
+            const property = rental.property;
             const propertyImage =
               property?.images?.[0] ||
               "https://images.unsplash.com/photo-1560518883-ce09059eeffa";
 
             return (
               <div
-                key={request.id}
+                key={rental.id}
                 className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col md:flex-row"
               >
                 {/* Property Image */}
@@ -87,10 +87,10 @@ export default async function TenantRentalRequestsPage() {
                       </h2>
                       <span
                         className={`px-3 py-1 text-xs font-bold rounded-full border ${getStatusBadge(
-                          request.status,
+                          rental.status,
                         )}`}
                       >
-                        {request.status}
+                        {rental.status}
                       </span>
                     </div>
 
@@ -109,14 +109,14 @@ export default async function TenantRentalRequestsPage() {
                             Duration
                           </span>
                           <span className="font-semibold">
-                            {new Date(request.startDate).toLocaleDateString()} —{" "}
-                            {new Date(request.endDate).toLocaleDateString()}
+                            {new Date(rental.startDate).toLocaleDateString()} —{" "}
+                            {new Date(rental.endDate).toLocaleDateString()}
                           </span>
                           <p className="pt-1 text-violet-600 font-semibold">
                             Total days:{" "}
                             {Math.ceil(
-                              (new Date(request.endDate).getTime() -
-                                new Date(request.startDate).getTime()) /
+                              (new Date(rental.endDate).getTime() -
+                                new Date(rental.startDate).getTime()) /
                                 (1000 * 60 * 60 * 24),
                             )}
                           </p>
@@ -130,7 +130,7 @@ export default async function TenantRentalRequestsPage() {
                             Total Rent
                           </span>
                           <span className="font-bold text-emerald-700 text-sm">
-                            ৳{request.totalPrice?.toLocaleString()}
+                            ৳{rental.totalPrice?.toLocaleString()}
                           </span>
                         </div>
                       </div>
@@ -142,14 +142,14 @@ export default async function TenantRentalRequestsPage() {
                     <span className="flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" />
                       Requested on:{" "}
-                      {new Date(request.createdAt).toLocaleDateString()}
+                      {new Date(rental.createdAt).toLocaleDateString()}
                     </span>
 
                     {/* Conditional Action Button */}
                     <RentalRequestActions
-                      requestId={request.id}
+                      rentalId={rental.id}
                       propertyTitle={property?.title || "Rental Property"}
-                      status={request.status}
+                      status={rental.status}
                     />
                   </div>
                 </div>

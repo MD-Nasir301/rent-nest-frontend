@@ -2,25 +2,52 @@
 
 import { useState } from "react";
 import ReviewModal from "./ReviewModal"; // আপনার বানানো রিভিউ মডাল
+import { toast } from "sonner";
+import { createPaymentSession } from "@/services/payment.service";
 
 interface Props {
-  requestId: string;
+  rentalId: string;
   propertyTitle: string;
   status: string;
 }
 
 export default function RentalRequestActions({
-  requestId,
+  rentalId,
   propertyTitle,
   status,
 }: Props) {
   const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handlePayment = async () => {
+    try {
+      setLoading(true);
+      const result = await createPaymentSession(rentalId);
+
+      if (result?.success && (result?.data?.paymentUrl || result?.data?.url)) {
+        const redirectUrl = result.data.paymentUrl || result.data.url;
+
+        window.location.href = redirectUrl;
+      } else {
+        toast.error(result?.message || "Payment initiation failed!");
+      }
+    } catch (error) {
+      console.error("Payment Handing Error:", error);
+      toast.error("Failed to process payment");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
       {status === "APPROVED" && (
-        <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-lg font-semibold transition text-xs">
-          Proceed to Pay
+        <button
+          onClick={handlePayment}
+          disabled={loading}
+          className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-lg font-semibold transition text-xs"
+        >
+          {loading ? "Processing..." : "Proceed to Pay"}
         </button>
       )}
 
@@ -37,7 +64,7 @@ export default function RentalRequestActions({
       <ReviewModal
         isOpen={isReviewOpen}
         onClose={() => setIsReviewOpen(false)}
-        rentalId={requestId}
+        rentalId={rentalId}
         propertyTitle={propertyTitle}
       />
     </>

@@ -10,7 +10,6 @@ export const getLandlordProperties = async () => {
       {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
           Cookie: cookieStore.toString(),
         },
         cache: "no-store",
@@ -40,7 +39,6 @@ export const getRentalRequests = async () => {
       {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
           Cookie: cookieStore.toString(),
         },
         cache: "no-store",
@@ -98,7 +96,6 @@ export const deleteProperty = async (propertyId: string) => {
       {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json",
           Cookie: cookieStore.toString(),
         },
       },

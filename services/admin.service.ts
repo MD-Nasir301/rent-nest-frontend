@@ -10,7 +10,6 @@ export const getAllUsers = async () => {
     const res = await fetch(`${BASE_URL}/api/admin/users`, {
       cache: "no-store",
       headers: {
-        "Content-Type": "application/json",
         Cookie: cookieStore.toString(),
       },
     });
@@ -43,7 +42,6 @@ export const getAllProperties = async () => {
     const res = await fetch(`${BASE_URL}/api/admin/properties`, {
       cache: "no-store",
       headers: {
-        "Content-Type": "application/json",
         Cookie: cookieStore.toString(),
       },
     });
@@ -59,7 +57,6 @@ export const getAllRentalRequests = async () => {
     const res = await fetch(`${BASE_URL}/api/admin/rentals`, {
       cache: "no-store",
       headers: {
-        "Content-Type": "application/json",
         Cookie: cookieStore.toString(),
       },
     });
