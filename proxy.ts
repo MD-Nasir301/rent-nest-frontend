@@ -3,18 +3,11 @@ import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getNewAccessToken } from "./services/refreshToken";
-import { jwtUtils } from "./utils/jwt";
+import { jwtUtils } from "./utils/jwt"; // আপনার ইউটিল পাথ
 
 const AUTH_ROUTES = ["/login", "/register"];
 
-// ✅ ১. Payment route গুলোকে PUBLIC_ROUTES-এ যোগ করুন
-// যাতে পেমেন্ট শেষে সেশন কুকি মিস হলেও ইউজার রিডাইরেক্ট এররে না পড়ে
-const PUBLIC_ROUTES = [
-  "/",
-  "/properties",
-  "/payment/success",
-  "/payment/cancel",
-];
+const PUBLIC_ROUTES = ["/", "/properties"];
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -84,7 +77,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Authorization (Role Based Access Control - RBAC)
+  //Authorization (Role Based Access Control - RBAC)
 
   // ADMIN Only
   if (pathname.startsWith("/admin-dashboard") && userRole !== "ADMIN") {
@@ -101,6 +94,14 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/not-found", request.url));
   }
 
+  // TENANT Only Payment Pages
+  if (
+    (pathname.startsWith("/payment/success") ||
+      pathname.startsWith("/payment/cancel")) &&
+    userRole !== "TENANT"
+  ) {
+    return NextResponse.redirect(new URL("/not-found", request.url));
+  }
   return NextResponse.next();
 }
 
