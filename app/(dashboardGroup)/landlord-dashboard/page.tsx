@@ -24,7 +24,7 @@ export default async function LandlordDashboardPage() {
     .filter((rental) => rental.status === "APPROVED");
   const completedRentals = properties
     .flatMap((property) => property.rentals || [])
-    .filter((rental) => rental.status === "COMPLETED");
+    .filter((rental) => rental.status === "ACTIVE");
   const totalEarning = completedRentals.reduce(
     (sum: number, rental) => sum + (rental.totalPrice || 0),
     0,

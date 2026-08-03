@@ -109,9 +109,9 @@ export default async function PropertyDetailsPage({
         {/* Small Additional Images */}
         <div className="hidden md:grid grid-rows-2 gap-4 h-full">
           {property.images && property.images.length > 1 ? (
-            property.images.slice(1, 3).map((img, idx) => (
+            property.images.slice(1, 3).map((img, index) => (
               <div
-                key={idx}
+                key={index}
                 className="relative h-full rounded-2xl overflow-hidden bg-gray-100 border"
               >
                 <Image
