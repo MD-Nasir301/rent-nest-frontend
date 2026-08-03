@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getNewAccessToken } from "./services/refreshToken";
-import { jwtUtils } from "./utils/jwt"; // আপনার ইউটিল পাথ
+import { jwtUtils } from "./utils/jwt";
 
 const AUTH_ROUTES = ["/login", "/register"];
 
@@ -22,16 +22,20 @@ export async function proxy(request: NextRequest) {
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
   let decodedAccessToken = accessToken
-    ? jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string)
+    ? jwtUtils.verifyToken(
+        accessToken,
+        process.env.JWT_ACCESS_SECRET as string
+      )
     : null;
 
   const decodedRefreshToken = refreshToken
     ? jwtUtils.verifyToken(
         refreshToken,
-        process.env.JWT_REFRESH_SECRET as string,
+        process.env.JWT_REFRESH_SECRET as string
       )
     : null;
 
+  // 🔁 Refresh token logic
   if (!decodedAccessToken?.success && decodedRefreshToken?.success) {
     const result = await getNewAccessToken();
 
@@ -45,20 +49,23 @@ export async function proxy(request: NextRequest) {
       });
 
       accessToken = newAccessToken;
+
       decodedAccessToken = jwtUtils.verifyToken(
-        accessToken!,
-        process.env.JWT_ACCESS_SECRET as string,
+        accessToken,
+        process.env.JWT_ACCESS_SECRET as string
       );
     }
   }
 
   let userRole: string | null = null;
+
   if (!decodedAccessToken?.success) {
     cookieStore.delete("accessToken");
   } else if (decodedAccessToken?.data) {
     userRole = (decodedAccessToken.data as JwtPayload).role;
   }
 
+  // 🔁 Prevent logged-in users from accessing auth pages
   if (accessToken && AUTH_ROUTES.includes(pathname)) {
     if (userRole === "ADMIN") {
       return NextResponse.redirect(new URL("/admin-dashboard", request.url));
@@ -72,41 +79,41 @@ export async function proxy(request: NextRequest) {
   }
 
   const isPublicRoute = PUBLIC_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(route + "/"),
-  );
-  const isAuthRoute = AUTH_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(route + "/"),
+    (route) => pathname === route || pathname.startsWith(route + "/")
   );
 
+  const isAuthRoute = AUTH_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(route + "/")
+  );
+
+  // 🔐 Protect private routes
   if (!accessToken && !isPublicRoute && !isAuthRoute) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  //Authorization (Role Based Access Control - RBAC)
+  // 🔒 RBAC
 
-  // ADMIN Only
   if (pathname.startsWith("/admin-dashboard") && userRole !== "ADMIN") {
     return NextResponse.redirect(new URL("/not-found", request.url));
   }
 
-  // LANDLORD Only
   if (pathname.startsWith("/landlord-dashboard") && userRole !== "LANDLORD") {
     return NextResponse.redirect(new URL("/not-found", request.url));
   }
 
-  // TENANT Only
   if (pathname.startsWith("/tenant-dashboard") && userRole !== "TENANT") {
     return NextResponse.redirect(new URL("/not-found", request.url));
   }
 
-  // TENANT Only Payment Pages
-  if (
-    (pathname.startsWith("/payment/success") ||
-      pathname.startsWith("/payment/cancel")) &&
-    userRole !== "TENANT"
-  ) {
-    return NextResponse.redirect(new URL("/not-found", request.url));
-  }
+  /**
+   * 🚨 IMPORTANT FIX:
+   * ❌ Removed strict role check for payment success/cancel
+   *
+   * কারণ:
+   * Stripe redirect-এ user authenticated নাও থাকতে পারে
+   * তাই এই route public রাখতে হবে
+   */
+
   return NextResponse.next();
 }
 
