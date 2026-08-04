@@ -51,7 +51,7 @@ export async function proxy(request: NextRequest) {
       accessToken = newAccessToken;
 
       decodedAccessToken = jwtUtils.verifyToken(
-        accessToken,
+        accessToken as string,
         process.env.JWT_ACCESS_SECRET as string
       );
     }
@@ -65,7 +65,7 @@ export async function proxy(request: NextRequest) {
     userRole = (decodedAccessToken.data as JwtPayload).role;
   }
 
-  // 🔁 Prevent logged-in users from accessing auth pages
+  //  Prevent logged-in users from accessing auth pages
   if (accessToken && AUTH_ROUTES.includes(pathname)) {
     if (userRole === "ADMIN") {
       return NextResponse.redirect(new URL("/admin-dashboard", request.url));
@@ -86,12 +86,12 @@ export async function proxy(request: NextRequest) {
     (route) => pathname === route || pathname.startsWith(route + "/")
   );
 
-  // 🔐 Protect private routes
+  //  Protect private routes
   if (!accessToken && !isPublicRoute && !isAuthRoute) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // 🔒 RBAC
+  //  RBAC
 
   if (pathname.startsWith("/admin-dashboard") && userRole !== "ADMIN") {
     return NextResponse.redirect(new URL("/not-found", request.url));
@@ -105,14 +105,6 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/not-found", request.url));
   }
 
-  /**
-   * 🚨 IMPORTANT FIX:
-   * ❌ Removed strict role check for payment success/cancel
-   *
-   * কারণ:
-   * Stripe redirect-এ user authenticated নাও থাকতে পারে
-   * তাই এই route public রাখতে হবে
-   */
 
   return NextResponse.next();
 }
@@ -120,3 +112,33 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: ["/((?!api|_next/static|favicon.ico|_next/image|.*\\.png$).*)"],
 };
+
+
+
+
+// import type { NextRequest } from "next/server";
+// import { NextResponse } from "next/server";
+
+// export async function proxy(request: NextRequest) {
+//   // ১. বর্তমান URL-এর পাথনাম নেওয়া
+//   const pathname = request.nextUrl.pathname;
+
+//   // ২. রিকোয়েস্ট রেসপন্স তৈরি করা
+//   const response = NextResponse.next();
+
+//   // --------------------------------------------------
+//   // আপনার কাস্টম লজিক (Header, Cookie বা Logger ইত্যাদি)
+//   // --------------------------------------------------
+
+//   // উদাহরণ: কাস্টম হেডার পাস করা (যদি লাগে)
+//   response.headers.set("x-current-path", pathname);
+
+//   return response;
+// }
+
+// // ৩. ম্যাচিং কনফিগারেশন (static Assets বাদ দিয়ে বাকি সব রুটে চলবে)
+// export const config = {
+//   matcher: [
+//     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+//   ],
+// };
