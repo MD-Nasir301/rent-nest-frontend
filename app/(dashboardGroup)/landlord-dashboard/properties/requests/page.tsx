@@ -1,6 +1,6 @@
 import LandlordRequestsTable from "@/app/(dashboardGroup)/_components/LandlordRequestsTable";
 import { getRentalRequests } from "@/services/landlord.service";
-
+export const dynamic = 'force-dynamic';
 export default async function LandlordRequestsPage() {
   const response = await getRentalRequests();
   const requests = response?.data || [];
