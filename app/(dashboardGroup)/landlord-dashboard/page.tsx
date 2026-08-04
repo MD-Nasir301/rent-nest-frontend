@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Building2, Clock, CheckCircle2 } from "lucide-react";
 import { getLandlordProperties } from "@/services/landlord.service";
 import { TProperty } from "@/types/type";
+export const dynamic = 'force-dynamic';
 
 export default async function LandlordDashboardPage() {
   const propertiesRes = await getLandlordProperties();
@@ -113,7 +114,7 @@ export default async function LandlordDashboardPage() {
       </div>
 
       {/* Action Banner  */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 md:p-8 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className=" from-blue-600 to-indigo-600 rounded-2xl p-6 md:p-8 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl md:text-2xl font-bold">
             Manage Incoming Requests
