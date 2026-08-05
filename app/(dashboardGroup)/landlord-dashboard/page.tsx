@@ -2,10 +2,11 @@ import Link from "next/link";
 import { Building2, Clock, CheckCircle2 } from "lucide-react";
 import { getLandlordProperties } from "@/services/landlord.service";
 import { TProperty } from "@/types/type";
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function LandlordDashboardPage() {
   const propertiesRes = await getLandlordProperties();
+  console.log("=== RAW BACKEND RESPONSE ===", JSON.stringify(propertiesRes, null, 2));
   const properties: TProperty[] = propertiesRes.data || [];
 
   if (!propertiesRes.success) {
@@ -25,7 +26,8 @@ export default async function LandlordDashboardPage() {
     .filter((rental) => rental.status === "APPROVED");
   const completedRentals = properties
     .flatMap((property) => property.rentals || [])
-    .filter((rental) => rental.status === "ACTIVE");
+    .filter((rental) => rental.status === "COMPLETED");
+  console.log(completedRentals, "=======================");
   const totalEarning = completedRentals.reduce(
     (sum: number, rental) => sum + (rental.totalPrice || 0),
     0,

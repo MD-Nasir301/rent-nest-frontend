@@ -1,5 +1,4 @@
 import { JwtPayload } from "jsonwebtoken";
-import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getNewAccessToken } from "./services/refreshToken";
@@ -16,7 +15,7 @@ const PUBLIC_ROUTES = [
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  const cookieStore = await cookies();
+  const response = NextResponse.next();
 
   let accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
@@ -42,7 +41,8 @@ export async function proxy(request: NextRequest) {
     if (result?.success) {
       const newAccessToken = result.data.accessToken;
 
-      cookieStore.set("accessToken", newAccessToken, {
+      // ✅ Middleware-এ Cookie সেট করার সঠিক নিয়ম
+      response.cookies.set("accessToken", newAccessToken, {
         httpOnly: true,
         maxAge: 60 * 60 * 24,
         sameSite: "lax",
@@ -59,14 +59,12 @@ export async function proxy(request: NextRequest) {
 
   let userRole: string | null = null;
 
-  if (!decodedAccessToken?.success) {
-    cookieStore.delete("accessToken");
-  } else if (decodedAccessToken?.data) {
+  if (decodedAccessToken?.data) {
     userRole = (decodedAccessToken.data as JwtPayload).role;
   }
 
-  //  Prevent logged-in users from accessing auth pages
-  if (accessToken && AUTH_ROUTES.includes(pathname)) {
+  // 1️⃣ Prevent logged-in users from accessing auth pages
+  if (accessToken && userRole && AUTH_ROUTES.includes(pathname)) {
     if (userRole === "ADMIN") {
       return NextResponse.redirect(new URL("/admin-dashboard", request.url));
     } else if (userRole === "LANDLORD") {
@@ -78,21 +76,22 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  const isPublicRoute = PUBLIC_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(route + "/")
-  );
+  // ✅ 2️⃣ Public Route Matching Logic (একদম নির্ভুল নিয়ম)
+  const isPublicRoute = PUBLIC_ROUTES.some((route) => {
+    if (route === "/") return pathname === "/";
+    return pathname === route || pathname.startsWith(route + "/");
+  });
 
   const isAuthRoute = AUTH_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(route + "/")
   );
 
-  //  Protect private routes
+  // 3️⃣ Protect private routes
   if (!accessToken && !isPublicRoute && !isAuthRoute) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  //  RBAC
-
+  // 4️⃣ RBAC Check
   if (pathname.startsWith("/admin-dashboard") && userRole !== "ADMIN") {
     return NextResponse.redirect(new URL("/not-found", request.url));
   }
@@ -105,14 +104,12 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/not-found", request.url));
   }
 
-
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {
   matcher: ["/((?!api|_next/static|favicon.ico|_next/image|.*\\.png$).*)"],
 };
-
 
 
 
