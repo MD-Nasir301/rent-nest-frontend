@@ -127,3 +127,9 @@ export type RequestRentModalProps = {
   isOpen: boolean;
   onClose: () => void;
 };
+
+export interface ICreateReviewPayload {
+  rentalId: string;
+  rating: number;
+  comment: string;
+}

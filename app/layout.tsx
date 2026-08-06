@@ -16,7 +16,14 @@ export default async function RootLayout({
       className={cn("h-full antialiased", "font-sans", inter.variable)}
     >
       <body className="min-h-full flex flex-col bg-gray-100">
-        <Toaster position="top-right" richColors />
+        <Toaster
+          position="top-right"
+          richColors
+          style={{
+            top: "65px",
+            right: "20px",
+          }}
+        />
         {children}
       </body>
     </html>

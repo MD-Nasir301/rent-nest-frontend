@@ -1,6 +1,5 @@
 import { Building2Icon } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 import RegisterForm from "../_components/RegisterForm";
 
 const registerPage = () => {

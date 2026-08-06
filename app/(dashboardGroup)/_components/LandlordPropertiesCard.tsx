@@ -40,26 +40,39 @@ export default function LandlordPropertiesCard({
     router.refresh();
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this property?")) return;
+const handleDelete = (id: string) => {
+  toast("Are you sure you want to delete this property?", {
+    position: "top-center",
+    description: "This action cannot be undone.",
+    action: {
+      label: "Delete",
+      onClick: async () => {
+        try {
+          setDeletingId(id);
+          const res = await deleteProperty(id);
 
-    try {
-      setDeletingId(id);
-      const res = await deleteProperty(id);
-
-      if (res?.success || res?.data) {
-        toast.success("Property deleted successfully!");
-        setProperties((prev) => prev.filter((item) => item.id !== id));
-        router.refresh();
-      } else {
-        toast.error(res?.message || "Failed to delete property");
-      }
-    } catch (error: any) {
-      toast.error(error?.message || "Something went wrong!");
-    } finally {
-      setDeletingId(null);
-    }
-  };
+          if (res?.success || res?.data) {
+            toast.success("Property deleted successfully!");
+            setProperties((prev) =>
+              prev.filter((item) => item.id !== id && item._id !== id)
+            );
+            router.refresh();
+          } else {
+            toast.error(res?.message || "Failed to delete property");
+          }
+        } catch (error: any) {
+          toast.error(error?.message || "Something went wrong!");
+        } finally {
+          setDeletingId("");
+        }
+      },
+    },
+    cancel: {
+      label: "Cancel",
+      onClick: () => {},
+    },
+  });
+};
 
   if (properties.length === 0) {
     return (

@@ -1,8 +1,5 @@
-export interface ICreateReviewPayload {
-  rentalId: string;
-  rating: number;
-  comment: string;
-}
+import { ICreateReviewPayload } from "@/types/type";
+
 
 export const createReview = async (reviewData: ICreateReviewPayload) => {
   try {
@@ -30,3 +27,10 @@ export const createReview = async (reviewData: ICreateReviewPayload) => {
     throw new Error(error?.message || "Something went wrong!");
   }
 };
+
+export interface EditPropertyModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  property: any;
+  onUpdateSuccess?: (data: any) => void;
+}

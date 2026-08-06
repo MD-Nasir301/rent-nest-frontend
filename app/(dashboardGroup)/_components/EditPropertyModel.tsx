@@ -12,13 +12,8 @@ import {
 } from "lucide-react";
 import { updateProperty } from "@/services/landlord.service";
 import { getAllCategories } from "@/services/category.service";
+import { EditPropertyModalProps } from "../_actions/review";
 
-interface EditPropertyModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  property: any;
-  onUpdateSuccess?: (data: any) => void;
-}
 
 export default function EditPropertyModal({
   isOpen,
@@ -51,7 +46,7 @@ export default function EditPropertyModal({
           : res?.data || res?.data?.data || [];
         setCategories(data);
       } catch (err) {
-        console.error("Failed to load categories", err);
+        toast.error("Failed to load categories")
       }
     };
     if (isOpen) fetchCategories();
