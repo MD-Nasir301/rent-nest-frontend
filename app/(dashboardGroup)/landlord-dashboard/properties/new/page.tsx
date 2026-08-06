@@ -1,16 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
   ArrowLeft,
   Loader2,
-  Plus,
   Trash2,
   Image as ImageIcon,
-  CheckCircle2,
 } from "lucide-react";
 import { createProperty } from "@/services/landlord.service";
 import { getAllCategories } from "@/services/category.service";
@@ -41,10 +39,10 @@ export default function CreatePropertyPage() {
         const categoryData = Array.isArray(res)
           ? res
           : Array.isArray(res?.data)
-          ? res.data
-          : Array.isArray(res?.data?.data)
-          ? res.data.data
-          : [];
+            ? res.data
+            : Array.isArray(res?.data?.data)
+              ? res.data.data
+              : [];
 
         setCategories(categoryData);
 
