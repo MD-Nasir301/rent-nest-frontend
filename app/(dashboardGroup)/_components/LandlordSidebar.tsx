@@ -2,16 +2,35 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Building2, PlusCircle, Inbox, Home } from "lucide-react";
+import {
+  LayoutDashboard,
+  Building2,
+  PlusCircle,
+  Inbox,
+  Home,
+} from "lucide-react";
 
-export default function LandlordSidebar() {
+export default function LandlordSidebar({ pending }: { pending: number }) {
   const pathname = usePathname();
 
   const navItems = [
     { label: "Overview", href: "/landlord-dashboard", icon: LayoutDashboard },
-    { label: "My Properties", href: "/landlord-dashboard/properties", icon: Building2 },
-    { label: "Add Property", href: "/landlord-dashboard/properties/new", icon: PlusCircle },
-    { label: "Manage Requests", href: "/landlord-dashboard/properties/requests", icon: Inbox },
+    {
+      label: "My Properties",
+      href: "/landlord-dashboard/properties",
+      icon: Building2,
+    },
+    {
+      label: "Add Property",
+      href: "/landlord-dashboard/properties/new",
+      icon: PlusCircle,
+    },
+    {
+      label: "Manage Requests",
+      href: "/landlord-dashboard/properties/requests",
+      icon: Inbox,
+      count: pending,
+    },
   ];
 
   return (
@@ -26,6 +45,7 @@ export default function LandlordSidebar() {
         <nav className="space-y-1.5">
           {navItems.map((item) => {
             const Icon = item.icon;
+            const count = item.count;
             const isActive = pathname === item.href;
 
             return (
@@ -38,8 +58,22 @@ export default function LandlordSidebar() {
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 }`}
               >
-                <Icon className={`w-5 h-5 ${isActive ? "text-blue-600" : "text-slate-400"}`} />
+                <Icon
+                  className={`w-5 h-5 ${isActive ? "text-blue-600" : "text-slate-400"}`}
+                />
                 {item.label}
+
+                {typeof item.count === "number" && item.count > 0 && (
+                  <span
+                    className={`inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-semibold rounded-full ${
+                      isActive
+                        ? "bg-white text-blue-600" 
+                        : "bg-red-500 text-white" 
+                    }`}
+                  >
+                    {item.count > 99 ? "99+" : item.count}
+                  </span>
+                )}
               </Link>
             );
           })}

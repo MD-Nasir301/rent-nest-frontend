@@ -6,7 +6,6 @@ export const dynamic = "force-dynamic";
 
 export default async function LandlordDashboardPage() {
   const propertiesRes = await getLandlordProperties();
-  console.log("=== RAW BACKEND RESPONSE ===", JSON.stringify(propertiesRes, null, 2));
   const properties: TProperty[] = propertiesRes.data || [];
 
   if (!propertiesRes.success) {
@@ -127,7 +126,7 @@ export default async function LandlordDashboardPage() {
           </p>
         </div>
         <Link
-          href="/landlord-dashboard/requests"
+          href="/landlord-dashboard/properties/requests"
           className="bg-white text-blue-600 hover:bg-blue-50 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap shadow-sm"
         >
           View All Requests
