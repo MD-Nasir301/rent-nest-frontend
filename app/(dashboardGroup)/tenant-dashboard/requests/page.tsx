@@ -4,6 +4,7 @@ import { getMyRentalRequests } from "@/services/rental.service";
 import { RentalRequest } from "@/types/type";
 import RentalRequestActions from "../../_components/RentalRequestActions";
 
+export const dynamic = "force-dynamic";
 export default async function TenantRentalRequestsPage() {
   const res = await getMyRentalRequests();
   const rentalRequests: RentalRequest[] = res?.data || [];
