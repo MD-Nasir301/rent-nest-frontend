@@ -38,22 +38,25 @@ export type LoginState = {
   };
 };
 
-export type RegisterState = {
-  success: boolean;
-  statusCode?: number;
-  message: string;
-  data?: {
-    user: {
-      id: string;
-      name: string;
-      email: string;
-      role: string;
-      isBanned: boolean;
-      createdAt: string;
-      updatedAt: string;
-    };
-  };
-} | null | undefined;
+export type RegisterState =
+  | {
+      success: boolean;
+      statusCode?: number;
+      message: string;
+      data?: {
+        user: {
+          id: string;
+          name: string;
+          email: string;
+          role: string;
+          isBanned: boolean;
+          createdAt: string;
+          updatedAt: string;
+        };
+      };
+    }
+  | null
+  | undefined;
 
 // types/category.type.ts
 
@@ -92,7 +95,7 @@ export type TProperty = {
   location: string;
   price: number;
   amenities?: string[];
-  images?: string[] ;
+  images?: string[];
   isAvailable: boolean;
   category?: {
     name: string;
@@ -103,6 +106,18 @@ export type TProperty = {
     email: string;
   };
   rentals?: RentalRequest[];
+  reviews?: {
+    id: string;
+    propertyId: string;
+    tenantId: string;
+    rentalId: string;
+    rating?: string;
+    comment: string;
+    createdAt?: string;
+    tenant?: {
+      name: string;
+    };
+  }[];
 };
 
 export type filterParam = {

@@ -1,9 +1,9 @@
 import { getSingleProperty } from "@/services/property.service";
-import { MapPin } from "lucide-react";
+import { MapPin, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { TProperty } from "@/types/type";
-import PropertySidebar from "../../_components/PropertySidebar"; 
+import PropertySidebar from "../../_components/PropertySidebar";
 
 interface PropertyDetailsPageProps {
   params: Promise<{
@@ -18,6 +18,17 @@ export default async function PropertyDetailsPage({
 
   const res = await getSingleProperty(id);
   const property: TProperty | null = res?.data || null;
+
+  const getAverageRating = () => {
+    if (!property?.reviews || property.reviews.length === 0) return null;
+
+    const total = property.reviews.reduce(
+      (acc: number, curr) => acc + (Number(curr.rating) || 0),
+      0,
+    );
+
+    return (total / property.reviews.length).toFixed(1);
+  };
 
   if (!property) {
     return (
@@ -158,23 +169,66 @@ export default async function PropertyDetailsPage({
           </div>
 
           {/* Amenities */}
-          {property.amenities && property.amenities.length > 0 && (
-            <div className="space-y-4 bg-white p-6 border rounded-2xl shadow-sm">
-              <h2 className="text-lg font-bold text-gray-900 border-b pb-2">
-                Amenities & Features
-              </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {property.amenities.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 bg-gray-50 border border-gray-100 p-2.5 rounded-xl text-xs text-gray-700 font-medium"
-                  >
-                    <span className="text-green-600 font-bold">✓</span> {item}
-                  </div>
-                ))}
-              </div>
+
+          <div className="space-y-4 bg-white p-6 border rounded-2xl shadow-sm">
+            <h2 className="text-lg font-bold text-gray-900 border-b pb-2">
+              Amenities & Features
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {property?.amenities?.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-2 bg-gray-50 border border-gray-100 p-2.5 rounded-xl text-xs text-gray-700 font-medium"
+                >
+                  <span className="text-green-600 font-bold">✓</span> {item}
+                </div>
+              ))}
             </div>
-          )}
+          </div>
+
+          {/*Review */}
+          <div className="space-y-3 bg-white p-6 border rounded-2xl shadow-sm">
+            <h2 className="text-lg font-bold text-gray-900 border-b pb-2">
+              Reviews
+            </h2>
+            <p className="flex items-center gap-1.5 text-sm font-semibold text-slate-700">
+              {getAverageRating() ? (
+                <>
+                  <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                  <span>{getAverageRating()}</span>
+                </>
+              ) : (
+                <span className="text-gray-400 font-normal">
+                  No ratings yet
+                </span>
+              )}
+            </p>
+            <div className="space-y-3">
+              {property.reviews && property.reviews.length > 0 ? (
+                property.reviews.map((review) => (
+                  <div
+                    key={review.id}
+                    className="p-3 bg-slate-50 rounded-xl border border-slate-100"
+                  >
+                    {/* Rating Stars / Score */}
+                    <div className="flex items-center gap-1 mb-1 text-amber-500 font-semibold text-xs">
+                      {review.tenant?.name} {review.rating} / 5{" "}
+                      <Star className="w-4 h-4 fill-amber-400 text-amber-400 inline" />{" "}
+                    </div>
+
+                    {/* Comment Text */}
+                    <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+                      {review.comment || "No comment provided."}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-gray-500 italic">
+                  No reviews provided for this property.
+                </p>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Right Column: Dynamic Client Component Sidebar */}
