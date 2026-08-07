@@ -1,8 +1,11 @@
 "use client";
+import { useState } from "react"; // 🟢 ১. useState যোগ করা হলো
 import Link from "next/link";
 import {
   Building2Icon,
   LogOut,
+  Menu, // 🟢 ২. Mobile Toggle Icons
+  X,
   Settings,
   User as UserIcon,
 } from "lucide-react";
@@ -25,6 +28,7 @@ import { logout } from "@/services/logout";
 
 export function Navbar({ user }: { user?: TUser }) {
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false); // 🟢 ৩. Mobile Menu State
 
   const userData = user?.data?.user;
   const userName = userData?.name || "User";
@@ -62,7 +66,7 @@ export function Navbar({ user }: { user?: TUser }) {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
-        {/* লোগো */}
+        {/* logo */}
         <Link
           href="/"
           className="inline-flex items-center gap-2 font-bold text-xl"
@@ -73,6 +77,7 @@ export function Navbar({ user }: { user?: TUser }) {
           </span>
         </Link>
 
+        {/* Desktop Nav  */}
         <nav
           className="hidden items-center gap-1 md:flex"
           aria-label="Main navigation"
@@ -88,62 +93,93 @@ export function Navbar({ user }: { user?: TUser }) {
           ))}
         </nav>
 
-        {user?.success ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              aria-label="Open user menu"
-            >
-              <Avatar className="size-9 cursor-pointer">
-                <AvatarImage src={userAvatar} alt={userName} />
-                <AvatarFallback>{getInitials(userName)}</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
+        {/* Right Action Area */}
+        <div className="flex items-center gap-2">
+          {user?.success ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label="Open user menu"
+              >
+                <Avatar className="size-9 cursor-pointer">
+                  <AvatarImage src={userAvatar} alt={userName} />
+                  <AvatarFallback>{getInitials(userName)}</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
 
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-sm text-black font-medium">{userName}</span>
-                    <span className="text-xs font-normal py-1 text-muted-foreground">
-                      {userEmail}
-                    </span>
-                    <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-green-600 text-white w-fit">
-                      {" "}
-                      {userRole}
-                    </span>
-                  </div>
-                </DropdownMenuLabel>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => router.push("/profile")}>
-                  <UserIcon className="mr-2 h-4 w-4" />
-                  Profile
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-sm text-black font-medium">{userName}</span>
+                      <span className="text-xs font-normal py-1 text-muted-foreground">
+                        {userEmail}
+                      </span>
+                      <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-green-600 text-white w-fit">
+                        {userRole}
+                      </span>
+                    </div>
+                  </DropdownMenuLabel>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem onClick={() => router.push("/profile")}>
+                    <UserIcon className="mr-2 h-4 w-4" />
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push("/settings")}>
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => handleUserMenuAction("logout")}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Log out
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/settings")}>
-                  <Settings className="mr-2 h-4 w-4" />
-                  Settings
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleUserMenuAction("logout")}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Log out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <div className="flex items-center gap-2">
-            <Link href="/login">
-              <Button variant="outline">Login</Button>
-            </Link>
-            <Link href="/register">
-              <Button>Sign Up</Button>
-            </Link>
-          </div>
-        )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link href="/login">
+                <Button variant="outline">Login</Button>
+              </Link>
+              <Link href="/register">
+                <Button>Sign Up</Button>
+              </Link>
+            </div>
+          )}
+
+          {/* Toggle Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle Menu"
+          >
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
       </div>
+
+      {/*Mobile dropdwon menu*/}
+      {isOpen && (
+        <nav className="border-b border-border bg-background px-4 pb-4 pt-2 md:hidden">
+          <div className="flex flex-col space-y-1">
+            {navItems.map((item) => (
+              <Link
+                key={item?.href}
+                href={item?.href || "#"}
+                onClick={() => setIsOpen(false)}
+                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              >
+                {item?.label}
+              </Link>
+            ))}
+          </div>
+        </nav>
+      )}
     </header>
   );
 }

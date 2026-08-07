@@ -34,41 +34,44 @@ export default function LandlordSidebar({ pending }: { pending: number }) {
   ];
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 p-6 flex flex-col justify-between hidden md:flex min-h-screen">
+    <aside className="w-full md:w-64 bg-white border-b md:border-b-0 md:border-r border-slate-200 p-3 md:p-6 flex flex-col justify-between shrink-0 md:min-h-screen">
       <div>
-        <div className="mb-8">
+        {/* টাইটেল: শুধু ডেস্কটপে দেখাবে */}
+        <div className="hidden md:block mb-8">
           <span className="text-xs font-bold tracking-wider text-slate-400 uppercase">
             Landlord Panel
           </span>
         </div>
 
-        <nav className="space-y-1.5">
+        {/* Mobile Horizontal and Dekstop Vertical */}
+        <nav className="flex flex-row md:flex-col gap-1.5 overflow-x-auto no-scrollbar pb-1 md:pb-0">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const count = item.count;
             const isActive = pathname === item.href;
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                className={`flex items-center gap-2.5 px-3.5 py-2 md:px-4 md:py-3 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all ${
                   isActive
                     ? "bg-blue-50 text-blue-600 font-semibold"
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 }`}
               >
                 <Icon
-                  className={`w-5 h-5 ${isActive ? "text-blue-600" : "text-slate-400"}`}
+                  className={`w-4 h-4 md:w-5 md:h-5 ${
+                    isActive ? "text-blue-600" : "text-slate-400"
+                  }`}
                 />
-                {item.label}
+                <span>{item.label}</span>
 
                 {typeof item.count === "number" && item.count > 0 && (
                   <span
-                    className={`inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-semibold rounded-full ${
+                    className={`inline-flex items-center justify-center min-w-[18px] h-4.5 md:min-w-[20px] md:h-5 px-1.5 text-[10px] md:text-xs font-semibold rounded-full ${
                       isActive
-                        ? "bg-white text-blue-600" 
-                        : "bg-red-500 text-white" 
+                        ? "bg-blue-600 text-white"
+                        : "bg-red-500 text-white"
                     }`}
                   >
                     {item.count > 99 ? "99+" : item.count}
@@ -80,7 +83,8 @@ export default function LandlordSidebar({ pending }: { pending: number }) {
         </nav>
       </div>
 
-      <div className="pt-6 border-t border-slate-100">
+ 
+      <div className="hidden md:block pt-6 border-t border-slate-100">
         <Link
           href="/"
           className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all"
